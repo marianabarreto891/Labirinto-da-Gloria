@@ -24,7 +24,7 @@ public class MenuDemo {
             System.out.println("ID: " + enigma.getIdContent());
             System.out.println("Pergunta: " + enigma.getQuestion());
             for (int i = 0; i < enigma.getOptions().length; i++) {
-                System.out.println((i) + "-> " + enigma.getOptions()[i]);
+                System.out.println((i) + ": " + enigma.getOptions()[i]);
             }
             System.out.println("Opção Correta: " + enigma.getCorrectAnswer());
             System.out.println("---");
