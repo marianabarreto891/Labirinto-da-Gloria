@@ -1,17 +1,15 @@
 package org.estg.ed.Enigma;
 
 import org.estg.ed.Content.Content;
-import org.estg.ed.Player.Player;
 
-import Lists.ArrayOrderedList;
 
 public class Enigma extends Content implements Comparable<Enigma> {
 
     private int correctAnswer;
     private String question;
-    private ArrayOrderedList<String> options;
+    private String options[];
 
-    public Enigma(int idContent, String question, ArrayOrderedList<String> options, int correctAnswer) {
+    public Enigma(int idContent, String question, String options[], int correctAnswer) {
         super(idContent);
         this.question = question;
         this.correctAnswer = correctAnswer;
@@ -19,22 +17,19 @@ public class Enigma extends Content implements Comparable<Enigma> {
 
     }
 
-
     @Override
     public int compareTo(Enigma other) {
         return Integer.compare(this.getIdContent(), other.getIdContent());
     }
 
-    
-    @Override
+    /*@Override
     public boolean interactType(Player p, String input) {
-
 
         if (Integer.parseInt(input.trim()) == this.correctAnswer) {
 
             setSolved(true);
 
-            System.out.println("The player " + /* p.getName() */ " solved the enigma with success!");
+            System.out.println("The player " +  p.getName()  " solved the enigma with success!");
 
             return true;
         } else {
@@ -44,6 +39,7 @@ public class Enigma extends Content implements Comparable<Enigma> {
             return false;
         }
     }
+    */
 
     public String getQuestion() {
         return question;
@@ -53,7 +49,7 @@ public class Enigma extends Content implements Comparable<Enigma> {
         return correctAnswer;
     }
 
-    public ArrayOrderedList<String> getOptions() {
+    public String[] getOptions() {
         return options;
     }
 }

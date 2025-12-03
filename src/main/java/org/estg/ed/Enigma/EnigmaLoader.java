@@ -6,13 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import Lists.ArrayOrderedList;
-
 public class EnigmaLoader {
-    public static ArrayOrderedList<Enigma> loadEnigmasFromJSON(String filename) {
+    public static EnigmaList loadEnigmasFromJSON(String filename) {
 
-        ArrayOrderedList<Enigma> enigmas = new ArrayOrderedList<Enigma>();
-         try (FileReader reader = new FileReader(filename)) {
+        EnigmaList enigmas = new EnigmaList();
+        try (FileReader reader = new FileReader(filename)) {
             JSONTokener tokener = new JSONTokener(reader);
             JSONObject root = new JSONObject(tokener);
             JSONArray enigmasArray = root.getJSONArray("enigmas");
@@ -23,23 +21,20 @@ public class EnigmaLoader {
                 String question = enigmaObj.getString("question");
                 JSONArray optionsArray = enigmaObj.getJSONArray("options");
 
-                ArrayOrderedList<String> options = new ArrayOrderedList<>();
+                String options[] = new String[optionsArray.length()]; 
                 for (int j = 0; j < optionsArray.length(); j++) {
-                    options.add(optionsArray.getString(j));
+                    options[j] = optionsArray.getString(j);
                 }
 
                 int correctOption = enigmaObj.getInt("correctOption");
 
                 Enigma enigma = new Enigma(id, question, options, correctOption);
-                enigmas.add(enigma);
+                enigmas.addToRear(enigma);
             }
         } catch (IOException e) {
             System.err.println("Erro ao ler o ficheiro JSON: " + e.getMessage());
         }
 
         return enigmas;
-    
-
-           
     }
 }

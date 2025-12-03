@@ -3,7 +3,7 @@ package org.estg.ed.Lever;
 import java.util.Random;
 
 import org.estg.ed.Content.Content;
-import org.estg.ed.Player.Player;
+
 
 public class Lever extends Content {
 
@@ -22,7 +22,7 @@ public class Lever extends Content {
         this.correctOption = (int) (randomNumero);
     }
 
-    @Override
+    /*@Override
     public boolean interactType(Player p, String choose) {
 
         if (isSolved()) {
@@ -39,7 +39,7 @@ public class Lever extends Content {
                 setSolved(true);
                 // aplicarEfeito(); // Desbloqueia as passagens no Grafo
 
-                System.out.println("Good, " + /* p.getNome() */ "! The lever was activated and opened a new path!");
+                System.out.println("Good, " + p.getNome()  "! The lever was activated and opened a new path!");
 
                 return true;
 
@@ -57,4 +57,5 @@ public class Lever extends Content {
             return false;
         }
     }
+        */
 }

@@ -1,6 +1,6 @@
 package org.estg.ed.Content;
 
-import org.estg.ed.Player.Player;
+
 
 public abstract class Content {
     private int idContent;
@@ -21,7 +21,7 @@ public abstract class Content {
      * @param input the input typed by the player
      * @return true if the interaction was successful, false otherwise
      */
-    public abstract boolean interactType(Player p, String input);
+    //public abstract boolean interactType(Player p, String input);
 
     /**
      * Returns the identifier of this content.
