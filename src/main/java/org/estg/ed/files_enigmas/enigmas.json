@@ -1,0 +1,48 @@
+{
+   "enigmas": [
+    {
+        "id": 1,
+        "question": "What is the capital of Portugal?",
+        "options": ["Lisbon", "Porto", "Coimbra", "Braga"],
+        "correctOption": 0
+    },
+    {
+        "id": 2,
+        "question": "What is the capital of France?",
+        "options": ["Berlin", "Madrid", "Paris", "Rome"],
+        "correctOption": 2
+    },
+    {
+        "id": 3,
+        "question": "In which year did World War I begin?",
+        "options": ["1914", "1918", "1939", "1905"],
+        "correctOption": 0
+    },
+    {
+        "id": 4,
+        "question": "What is the largest planet in the Solar System?",
+        "options": ["Saturn", "Mars", "Jupiter", "Earth"],
+        "correctOption": 2
+    },
+    {
+        "id": 5,
+        "question": "Who is the author of the epic work 'Os Lusíadas'?",
+        "options": ["Fernando Pessoa", "José Saramago", "Luís de Camões", "Eça de Queirós"],
+        "correctOption": 2
+    },
+    {
+        "id": 6,
+        "question": "Which chemical element is represented by the symbol 'Au'?",
+        "options": ["Silver", "Aluminum", "Gold", "Copper"],
+        "correctOption": 2
+    },
+    {
+        "id": 7,
+        "question": "What is the official currency of the United States?",
+        "options": ["Euro", "Pound", "Dollar", "Yuan"],
+        "correctOption": 2
+    }
+]
+
+
+}
