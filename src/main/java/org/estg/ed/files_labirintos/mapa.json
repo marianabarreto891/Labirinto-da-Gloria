@@ -1,0 +1,38 @@
+{
+  "name": "Labirinto da Glória",
+  "entries": [1, 2],
+  "divisions": [
+    {
+      "id": 3,
+      "content": "ENIGMA",
+      "contentId": 1
+    },
+    {
+      "id": 4,
+      "content": "LEVER",
+      "contentId": 1
+    }
+  ],
+  "centralRoom": {
+    "id": 5
+  },
+  "halls": [
+    {
+      "from": 1,
+      "to": 3
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "event": "SWAP_POSITIONS"
+    },
+    {
+      "from": 3,
+      "to": 4
+    },
+    {
+      "from": 4,
+      "to": 5
+    }
+  ]
+}
