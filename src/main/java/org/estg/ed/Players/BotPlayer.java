@@ -1,9 +1,11 @@
 package org.estg.ed.Players;
 
-import org.estg.ed.Hall.Hallway;
-import Lists.DoublyLinkedUnorderedList;
 import java.util.Iterator;
-import org.estg.ed.teste1.Divisao;
+
+import org.estg.ed.Divisions.Division;
+import org.estg.ed.Hall.Hallway;
+
+import Lists.DoublyLinkedUnorderedList;
 
 /**
  * Represents an automated player (Bot) in the Labyrinth of Glory game simulator.
@@ -17,7 +19,7 @@ public class BotPlayer extends Player {
      * * @param name The unique identifier of the bot.
      * @param initialPosition The entry Division where the bot begins the game.
      */
-    public BotPlayer(String name, Divisao initialPosition) {
+    public BotPlayer(String name, Division initialPosition) {
         super(name, initialPosition);
     }
 

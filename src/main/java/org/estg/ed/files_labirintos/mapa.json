@@ -1,16 +1,13 @@
 {
+  "id": 1,
   "name": "Labirinto da Glória",
   "entries": [1, 2],
   "divisions": [
     {
-      "id": 3,
-      "content": "ENIGMA",
-      "contentId": 1
+      "id": 3
     },
     {
-      "id": 4,
-      "content": "LEVER",
-      "contentId": 1
+      "id": 4
     }
   ],
   "centralRoom": {
@@ -19,20 +16,23 @@
   "halls": [
     {
       "from": 1,
-      "to": 3
+      "to": 3,
+      "weight": 1
     },
     {
       "from": 2,
       "to": 3,
-      "event": "SWAP_POSITIONS"
+      "weight": 2
     },
     {
       "from": 3,
-      "to": 4
+      "to": 4,
+      "weight": 3
     },
     {
       "from": 4,
-      "to": 5
+      "to": 5,
+      "weight": 4
     }
   ]
 }

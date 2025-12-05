@@ -1,46 +1,51 @@
 package org.estg.ed.Hall;
-import org.estg.ed.Events.Event;
+
+import org.estg.ed.Divisions.Division;
+import org.estg.ed.Events.IEvent;
 import org.estg.ed.Players.Player;
-import org.estg.ed.teste1.Divisao;
 
 /**
  * Represents a path (edge) connecting two Divisions (nodes) in the Maze.
- * A Hallway may contain a random Event that is activated when a player crosses it.
+ * A Hallway may contain a random Event that is activated when a player crosses
+ * it.
  */
 public class Hallway {
 
-  
     /**
      * The Division from which the Hallway starts.
      */
-    private final Divisao origin;
+    private final Division origin;
 
     /**
      * The Division to which the Hallway leads.
      */
-    private final Divisao destination;
+    private final Division destination;
 
     /**
      * The random event that can occur when crossing the hallway.
      * It can be null if no event is associated.
-     * These events can include gaining extra moves, swapping positions, moving back, etc..
+     * These events can include gaining extra moves, swapping positions, moving
+     * back, etc..
      */
-    private final Event event;
+    private final IEvent event;
 
     /**
      * The weight or cost associated with traversing this Hallway.
-     * This can represent distance, difficulty, or any other metric relevant to the game.
+     * This can represent distance, difficulty, or any other metric relevant to the
+     * game.
      */
     private final double weight;
 
     /**
-     * Constructs a new Hallway connecting an origin Division to a destination Division,
+     * Constructs a new Hallway connecting an origin Division to a destination
+     * Division,
      * and associates an Event with it.
      * * @param origin The starting Division of the path.
+     * 
      * @param destination The ending Division of the path.
-     * @param event The random Event associated with this hallway.
+     * @param event       The random Event associated with this hallway.
      */
-    public Hallway(Divisao origin, Divisao destination, Event event, double weight) {
+    public Hallway(Division origin, Division destination, IEvent event, double weight) {
         this.origin = origin;
         this.destination = destination;
         this.event = event;
@@ -49,17 +54,18 @@ public class Hallway {
 
     /**
      * Gets the weight (cost/distance) associated with traversing this Hallway.
+     * 
      * @return The weight of the Hallway.
      */
     public double getWeight() {
         return weight;
     }
-    
+
     /**
      * Gets the origin Division of this Hallway.
      * * @return The origin Division.
      */
-    public Divisao getOrigin() {
+    public Division getOrigin() {
         return origin;
     }
 
@@ -67,7 +73,7 @@ public class Hallway {
      * Gets the destination Division of this Hallway.
      * * @return The destination Division.
      */
-    public Divisao getDestination() {
+    public Division getDestination() {
         return destination;
     }
 
@@ -75,15 +81,14 @@ public class Hallway {
      * Gets the random Event associated with this Hallway.
      * * @return The Event object, or null if there is none.
      */
-    public Event getEvent() {
+    public IEvent getEvent() {
         return event;
     }
 
-
-
     /**
      * Activates the random event (if it exists) when a Player crosses the Hallway.
-     * This method invokes the Event's logic to apply effects, such as gaining extra moves,
+     * This method invokes the Event's logic to apply effects, such as gaining extra
+     * moves,
      * swapping positions, moving back, or being blocked from playing.
      * * @param player The Player who is crossing the Hallway.
      */
@@ -91,7 +96,7 @@ public class Hallway {
         if (this.event != null) {
             // We assume the Event class has an 'applyEffect' method.
             // You will need to define what this action entails in the Event class.
-            this.event.applyEffect(player);
+            // this.event.applyEffect(player);
             System.out.println(" Random event activated in the hallway! Effect applied to " + player.getName());
         } else {
             System.out.println("Safe path. No random event occurred.");
@@ -102,9 +107,11 @@ public class Hallway {
      * Checks if this Hallway connects to the specified Division.
      * Useful for traversing the graph's connections.
      * * @param division The Division to be checked (if it's origin or destination).
-     * @return true if the Division is either the origin or destination of this Hallway, false otherwise.
+     * 
+     * @return true if the Division is either the origin or destination of this
+     *         Hallway, false otherwise.
      */
-    protected boolean connectsDivision(Divisao division) {
+    protected boolean connectsDivision(Division division) {
         return origin.equals(division) || destination.equals(division);
     }
 
@@ -112,10 +119,12 @@ public class Hallway {
      * Returns the Division opposite to the one provided.
      * Useful for navigating the maze from a known Division.
      * * @param division The Player's current Division.
-     * @return The Division to which the Hallway leads, or null if the provided Division
-     * does not belong to this Hallway.
+     * 
+     * @return The Division to which the Hallway leads, or null if the provided
+     *         Division
+     *         does not belong to this Hallway.
      */
-    protected Divisao getOppositeDivision(Divisao division) {
+    protected Division getOppositeDivision(Division division) {
         if (origin.equals(division)) {
             return destination;
         } else if (destination.equals(division)) {
@@ -135,18 +144,20 @@ public class Hallway {
     @Override
     public String toString() {
         String eventDescription = (event != null) ? event.toString() : "None";
-        return String.format("Hallway: %s <-> %s | Event: %s", 
-                             origin.getName(), // Assumes Divisao has a getName() method
-                             destination.getName(), 
-                             eventDescription);
+        return String.format("Hallway: %s <-> %s | Event: %s",
+                origin.getId(), // Assumes Divisao has a getName() method
+                destination.getId(),
+                eventDescription);
     }
-
 
     /**
      * Compares this Hallway to another object for equality.
-     * In an undirected maze (graph), two hallways are considered equal if they connect
-     * the same two divisions, regardless of which division is designated as 'origin' or 'destination'.
+     * In an undirected maze (graph), two hallways are considered equal if they
+     * connect
+     * the same two divisions, regardless of which division is designated as
+     * 'origin' or 'destination'.
      * * @param obj The object to compare with.
+     * 
      * @return true if the objects are functionally equal, false otherwise.
      */
     @Override
@@ -161,11 +172,11 @@ public class Hallway {
         Hallway other = (Hallway) obj;
 
         // Two Hallways are considered equal if they connect the same two divisions.
-        // Since the maze seems undirected (you can move back and forth), we check both permutations.
+        // Since the maze seems undirected (you can move back and forth), we check both
+        // permutations.
         boolean sameForward = this.origin.equals(other.origin) && this.destination.equals(other.destination);
         boolean sameBackward = this.origin.equals(other.destination) && this.destination.equals(other.origin);
 
-        
         return sameForward || sameBackward;
     }
 }

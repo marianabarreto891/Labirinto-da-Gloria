@@ -1,7 +1,5 @@
 package org.estg.ed.Content;
 
-
-
 public abstract class Content {
     private int idContent;
     private boolean isSolved;
