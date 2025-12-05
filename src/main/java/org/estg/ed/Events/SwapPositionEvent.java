@@ -1,7 +1,7 @@
 package org.estg.ed.Events;
 
+import org.estg.ed.Divisions.Division;
 import org.estg.ed.Players.Player;
-import org.estg.ed.teste1.Divisao;
 
 
 /**
@@ -28,8 +28,8 @@ public class SwapPositionEvent extends Event {
         if (targetPlayer != null) {
             
             // 1. Store the current positions (the "old" positions)
-            Divisao playerCurrentPos = player.getCurrentDivision(); 
-            Divisao targetCurrentPos = targetPlayer.getCurrentDivision();
+            Division playerCurrentPos = player.getCurrentDivision(); 
+            Division targetCurrentPos = targetPlayer.getCurrentDivision();
 
             // 2. Perform the swap using the safe method (setCurrentDivision), 
             // which preserves the previousRecoilPosition for the moveBack logic.

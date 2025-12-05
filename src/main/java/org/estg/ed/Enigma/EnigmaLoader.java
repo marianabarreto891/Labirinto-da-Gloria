@@ -2,14 +2,17 @@ package org.estg.ed.Enigma;
 
 import java.io.FileReader;
 import java.io.IOException;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-public class EnigmaLoader {
-    public static EnigmaList loadEnigmasFromJSON(String filename) {
+import Lists.ArrayUnorderedList;
 
-        EnigmaList enigmas = new EnigmaList();
+public class EnigmaLoader {
+    public static ArrayUnorderedList<Enigma> loadEnigmasFromJSON(String filename) {
+
+        ArrayUnorderedList<Enigma> enigmas = new ArrayUnorderedList<Enigma>();
         try (FileReader reader = new FileReader(filename)) {
             JSONTokener tokener = new JSONTokener(reader);
             JSONObject root = new JSONObject(tokener);

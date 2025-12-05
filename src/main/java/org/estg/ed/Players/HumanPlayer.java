@@ -1,12 +1,13 @@
 package org.estg.ed.Players;
 
-import org.estg.ed.Hall.Hallway;
-import Lists.DoublyLinkedUnorderedList;
 import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.Scanner; 
-import org.estg.ed.teste1.Divisao;
 
+import org.estg.ed.Divisions.Division;
+import org.estg.ed.Hall.Hallway;
+
+import Lists.DoublyLinkedUnorderedList; 
 /**
  * Represents a human-controlled player (Manual mode) in the Labyrinth of Glory game simulator.
  * This class extends the abstract Player base and implements decision-making
@@ -19,7 +20,7 @@ public class HumanPlayer extends Player {
      * * @param name The unique identifier of the human player.
      * @param initialPosition The entry Division where the player begins the game.
      */
-    public HumanPlayer(String name, Divisao initialPosition) {
+    public HumanPlayer(String name, Division initialPosition) {
         super(name, initialPosition);
     }
 
@@ -52,12 +53,12 @@ public class HumanPlayer extends Player {
                 // 1. List options and populate the temporary array
                 Iterator<Hallway> iterator = availableHallways.iterator();
                 int i = 0;
-                System.out.println("\n" + this.getName() + " está em " + this.getCurrentDivision().getName() + ". Escolha um caminho:");
+                System.out.println("\n" + this.getName() + " está em " + this.getCurrentDivision().getId() + ". Escolha um caminho:");
                 
                 while (iterator.hasNext()) {
                     Hallway hallway = iterator.next();
                     hallwayOptions[i] = hallway; // Store reference in the temporary array
-                    System.out.println("[" + i + "] Ir para " + hallway.getDestination().getName() + " (" + hallway.toString() + ")"); 
+                    System.out.println("[" + i + "] Ir para " + hallway.getDestination().getId() + " (" + hallway.toString() + ")"); 
                     i++;
                 }
 
