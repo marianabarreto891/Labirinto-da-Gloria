@@ -1,13 +1,14 @@
 package org.estg.ed.Enigma;
 
 import org.estg.ed.Content.Content;
-
+import org.estg.ed.Divisions.DivisionType;
+import org.estg.ed.Players.Player;
 
 public class Enigma extends Content implements Comparable<Enigma> {
 
-    private int correctAnswer;
-    private String question;
-    private String options[];
+    private final int correctAnswer;
+    private final String question;
+    private final String options[];
 
     public Enigma(int idContent, String question, String options[], int correctAnswer) {
         super(idContent);
@@ -22,24 +23,36 @@ public class Enigma extends Content implements Comparable<Enigma> {
         return Integer.compare(this.getIdContent(), other.getIdContent());
     }
 
-    /*@Override
-    public boolean interactType(Player p, String input) {
+    @Override
+    public DivisionType getType() {
+        return DivisionType.ENIGMA;
+    }
 
-        if (Integer.parseInt(input.trim()) == this.correctAnswer) {
-
-            setSolved(true);
-
-            System.out.println("The player " +  p.getName()  " solved the enigma with success!");
-
+  
+    @Override
+    public boolean interactType(Player p) {
+        if (isSolved()) {
             return true;
-        } else {
+        }
 
-            System.out.println("Incorrect answer. Try again!");
+        String answer = p.answerEnigma(question, options);
 
+        try {
+            int op = Integer.parseInt(answer.trim());
+            if (op == correctAnswer) {
+                setSolved(true);
+                System.out.println("The player " + p.getName() + " solved the enigma with success!");
+                p.incrementEnigmasSolved();
+                return true;
+            } else {
+                System.out.println("Incorrect answer. Try again!");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a number.");
             return false;
         }
     }
-    */
 
     public String getQuestion() {
         return question;

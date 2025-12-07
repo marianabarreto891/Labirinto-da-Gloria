@@ -22,12 +22,12 @@ public abstract class Player implements Comparable<Player> {
     private Division currentPosition;
     private final UnorderedListADT<Object> pathHistory;
     private int turnsBlocked;
-    public Division previousRecoilPosition; // The last safe position before a move or swap
-    private int extraMoves; // Stores extra moves granted by events
+    public Division previousRecoilPosition; 
+    private int extraMoves; 
     private int enigmasSolvedCount;
-    public int totalTurnsBlockedAccumulated; // Total number of turns the player has been blocked throughout the game
+    public int totalTurnsBlockedAccumulated; 
 
-    // Note: The 'Divisao' class is assumed to be the correct name for the room/division.
+    
 
     /**
      * Constructs a new Player instance, initializing their position and status.
@@ -46,6 +46,9 @@ public abstract class Player implements Comparable<Player> {
     }
 
     
+    public abstract String answerEnigma(String question, String[] options);
+
+    public abstract String answerLever();
 
     /**
      * Gets the immutable name of the player.
