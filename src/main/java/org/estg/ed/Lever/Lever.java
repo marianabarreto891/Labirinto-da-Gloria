@@ -3,59 +3,48 @@ package org.estg.ed.Lever;
 import java.util.Random;
 
 import org.estg.ed.Content.Content;
-
+import org.estg.ed.Divisions.DivisionType;
+import org.estg.ed.Players.Player;
 
 public class Lever extends Content {
 
     private int correctOption;
-    private int randomNumero;
-    Random r = new Random();
-
-    private static final int MIN_OPTION = 1;
-    private static final int MAX_OPTION = 4;
+    private static final int TOTAL_OPTIONS = 3;
 
     public Lever(int idContent) {
         super(idContent);
-        do {
-            randomNumero = r.nextInt(3);
-        } while (randomNumero == 0);
-        this.correctOption = (int) (randomNumero);
+        Random r = new Random();
+        this.correctOption = r.nextInt(TOTAL_OPTIONS) + 1;
     }
 
-    /*@Override
-    public boolean interactType(Player p, String choose) {
+    @Override
+    public DivisionType getType() {
+        return DivisionType.LEVER;
+    }
 
+    
+    @Override
+    public boolean interactType(Player p) {
         if (isSolved()) {
             System.out.println("The Lever " + getIdContent() + " is already active. The way is open.");
             return true;
         }
 
+        String choice = p.answerLever();
         try {
-
-            int playerSelection = Integer.parseInt(choose.trim());
-
+            int playerSelection = Integer.parseInt(choice.trim());
             if (playerSelection == this.correctOption) {
-
                 setSolved(true);
-                // aplicarEfeito(); // Desbloqueia as passagens no Grafo
-
-                System.out.println("Good, " + p.getNome()  "! The lever was activated and opened a new path!");
-
+                System.out.println("Good, " + p.getName() + "! The lever was activated and opened a new path!");
                 return true;
-
             } else {
-
                 System.out.println("Incorrect Number (" + playerSelection + ").");
-
                 return false;
             }
-
-        } catch (Exception e) {
-
-            System.out.println("Invalid entry. Please enter a number.");
-
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid entry. Please enter a number between 1 and 3.");
             return false;
         }
     }
-        */
+
 }

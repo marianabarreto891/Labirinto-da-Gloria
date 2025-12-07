@@ -1,13 +1,18 @@
 package org.estg.ed.Content;
 
+import org.estg.ed.Divisions.DivisionType;
+import org.estg.ed.Players.Player;
+
 public abstract class Content {
-    private int idContent;
-    private boolean isSolved;
+    private final int idContent;
+    private boolean solved;
 
     public Content(int idContent) {
         this.idContent = idContent;
-        this.isSolved = false;
+        this.solved = false;
     }
+
+    public abstract DivisionType getType();
 
     /**
      * Executes the interaction between the player and the content.
@@ -15,11 +20,11 @@ public abstract class Content {
      * This method must be implemented by subclasses with the specific logic
      * for each content type.
      * 
-     * @param j     the current player
-     * @param input the input typed by the player
+     * @param p the current player
+     *
      * @return true if the interaction was successful, false otherwise
      */
-    //public abstract boolean interactType(Player p, String input);
+    public abstract boolean interactType(Player p);
 
     /**
      * Returns the identifier of this content.
@@ -36,7 +41,7 @@ public abstract class Content {
      * @return true if solved, false otherwise
      */
     public boolean isSolved() {
-        return isSolved;
+        return solved;
     }
 
     /**
@@ -47,6 +52,6 @@ public abstract class Content {
      * @param isSolved
      */
     protected void setSolved(boolean isSolved) {
-        this.isSolved = isSolved;
+        this.solved = isSolved;
     }
 }

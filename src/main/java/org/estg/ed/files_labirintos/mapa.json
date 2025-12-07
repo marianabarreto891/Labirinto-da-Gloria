@@ -2,17 +2,40 @@
   "id": 1,
   "name": "Labirinto da Glória",
   "entries": [1, 2],
+  "centralRoom": 5,
   "divisions": [
     {
-      "id": 3
+      "id": 1
     },
     {
-      "id": 4
+      "id": 2
+    },
+    {  
+      "id": 3,
+      "content": {
+        "type": "ENIGMA"
+      }
+    },
+    {
+      "id": 4,
+      "content": {
+        "type": "LEVER"
+      }
+    },
+    {
+      "id": 5
+    },
+    { 
+      "id": 6 
+    },
+    { 
+      "id": 7 
+    },
+    { 
+      "id": 8 
     }
   ],
-  "centralRoom": {
-    "id": 5
-  },
+
   "halls": [
     {
       "from": 1,

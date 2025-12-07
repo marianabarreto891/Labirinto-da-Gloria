@@ -1,6 +1,6 @@
 package org.estg.ed.Divisions;
 
-public enum ContentRoom {
+public enum DivisionType {
     ENIGMA,
     LEVER
 }
