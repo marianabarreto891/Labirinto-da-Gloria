@@ -111,7 +111,7 @@ public class Hallway {
      * @return true if the Division is either the origin or destination of this
      *         Hallway, false otherwise.
      */
-    protected boolean connectsDivision(Division division) {
+    public boolean connectsDivision(Division division) {
         return origin.equals(division) || destination.equals(division);
     }
 
@@ -124,7 +124,7 @@ public class Hallway {
      *         Division
      *         does not belong to this Hallway.
      */
-    protected Division getOppositeDivision(Division division) {
+    public Division getOppositeDivision(Division division) {
         if (origin.equals(division)) {
             return destination;
         } else if (destination.equals(division)) {
@@ -134,7 +134,7 @@ public class Hallway {
         }
     }
 
-    // --- Other methods (like toString, equals, if necessary) ---
+    
 
     /**
      * Generates a string representation of the Hallway.
@@ -171,9 +171,7 @@ public class Hallway {
 
         Hallway other = (Hallway) obj;
 
-        // Two Hallways are considered equal if they connect the same two divisions.
-        // Since the maze seems undirected (you can move back and forth), we check both
-        // permutations.
+        
         boolean sameForward = this.origin.equals(other.origin) && this.destination.equals(other.destination);
         boolean sameBackward = this.origin.equals(other.destination) && this.destination.equals(other.origin);
 
