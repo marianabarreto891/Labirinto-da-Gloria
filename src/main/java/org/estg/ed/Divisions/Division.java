@@ -15,12 +15,9 @@ public class Division {
      */
     private final int id;
 
-    /**
-     * The specific game content (challenge/item) located in this division.
-     */
-    private Content content;
-
     private DivisionType dt;
+
+    private Content content;
 
     /**
      * Constructs a new Division object with the specified unique identifier.
@@ -28,32 +25,14 @@ public class Division {
      *
      * @param id The unique integer identifier for this division.
      */
-    public Division(int id, Content content, DivisionType dt) {
+    public Division(int id, DivisionType dt) {
         this.id = id;
-        this.content = null;
         this.dt = dt;
+        this.content = null;
     }
 
     public Division(int id) {
         this.id = id;
-    }
-
-    /**
-     * Sets the content object associated with this instance.
-     *
-     * @param content The Content object to be set.
-     */
-    public void setContent(Content content) {
-        this.content = content;
-    }
-
-    /**
-     * Checks if a content object has been set for this instance.
-     *
-     * @return true if the content is not null; false otherwise.
-     */
-    public boolean hasContent() {
-        return this.content != null;
     }
 
     /**
@@ -63,26 +42,6 @@ public class Division {
      */
     public int getId() {
         return id;
-    }
-
-    /**
-     * Retrieves the content object associated with this instance.
-     *
-     * @return The current Content object, or null if no content has been set.
-     */
-    public Content getContent() {
-        return content;
-    }
-
-    /**
-     * Returns a string representation of the Division.
-     *
-     * @return A formatted string describing the division.
-     */
-    @Override
-    public String toString() {
-        String contentStr = (content == null) ? "Empty" : "Has Challenge (" + content.getIdContent() + ")";
-        return "Division " + id + " [" + contentStr + "]";
     }
 
     /**
@@ -106,5 +65,30 @@ public class Division {
         return id == division.id;
     }
 
-   
+    public DivisionType getDt() {
+        return dt;
+    }
+
+    public void setDt(DivisionType dt) {
+        this.dt = dt;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Division{");
+        sb.append("id=").append(id);
+        sb.append(", dt=").append(dt);
+        sb.append(", Content=").append(content);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public void setContent(Content content) {
+        this.content = content;
+    }
+
+    public Content getContent() {
+        return content;
+    }
 }

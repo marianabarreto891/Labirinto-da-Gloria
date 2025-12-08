@@ -1,27 +1,24 @@
 package org.estg.ed.Enigma;
 
+import java.util.Arrays;
+
 import org.estg.ed.Content.Content;
 import org.estg.ed.Divisions.DivisionType;
 import org.estg.ed.Players.Player;
 
-public class Enigma extends Content implements Comparable<Enigma> {
+public class Enigma extends Content {
 
     private final int correctAnswer;
     private final String question;
     private final String options[];
 
-    public Enigma(int idContent, String question, String options[], int correctAnswer) {
-        super(idContent);
+    public Enigma(String question, String options[], int correctAnswer) {
         this.question = question;
         this.correctAnswer = correctAnswer;
         this.options = options;
 
     }
 
-    @Override
-    public int compareTo(Enigma other) {
-        return Integer.compare(this.getIdContent(), other.getIdContent());
-    }
 
     @Override
     public DivisionType getType() {
@@ -51,7 +48,7 @@ public class Enigma extends Content implements Comparable<Enigma> {
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. Please enter a number.");
             return false;
-        }
+        }       
     }
 
     public String getQuestion() {
@@ -65,4 +62,12 @@ public class Enigma extends Content implements Comparable<Enigma> {
     public String[] getOptions() {
         return options;
     }
+
+    @Override
+    public String toString() {
+        return "Enigma [correctAnswer=" + correctAnswer + ", question=" + question + ", options="
+                + Arrays.toString(options) + ", toString()=" + super.toString() + "]";
+    }
+
+    
 }

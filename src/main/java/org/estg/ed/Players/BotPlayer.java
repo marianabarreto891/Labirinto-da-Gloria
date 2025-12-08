@@ -1,6 +1,7 @@
 package org.estg.ed.Players;
 
 import java.util.Iterator;
+import java.util.Scanner;
 
 import org.estg.ed.Divisions.Division;
 import org.estg.ed.Hall.Hallway;
@@ -23,8 +24,8 @@ public class BotPlayer extends Player {
      * 
      * @param initialPosition The entry Division where the bot begins the game.
      */
-    public BotPlayer(String name, Division initialPosition) {
-        super(name, initialPosition);
+    public BotPlayer(String name, Division initialPosition, Scanner sc) {
+        super(name, initialPosition, sc);
     }
 
     @Override
@@ -79,4 +80,9 @@ public class BotPlayer extends Player {
         // Should theoretically not be reached if size > 0, but provides a fallback.
         return chosenHallway;
     }
+
+    public boolean isBot() {
+        return true;
+    }
+
 }

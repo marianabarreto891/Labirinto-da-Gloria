@@ -4,5 +4,6 @@ public enum DivisionType {
     ENTRY,
     ENIGMA,
     LEVER,
-    CENTRAL
+    CENTRAL,
+    NULL
 }

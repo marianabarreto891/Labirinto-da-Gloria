@@ -1,7 +1,6 @@
 package org.estg.ed.Hall;
 
 import org.estg.ed.Divisions.Division;
-import org.estg.ed.Events.IEvent;
 import org.estg.ed.Players.Player;
 
 /**
@@ -27,7 +26,7 @@ public class Hallway {
      * These events can include gaining extra moves, swapping positions, moving
      * back, etc..
      */
-    private final IEvent event;
+    private final int eventId;
 
     /**
      * The weight or cost associated with traversing this Hallway.
@@ -45,10 +44,10 @@ public class Hallway {
      * @param destination The ending Division of the path.
      * @param event       The random Event associated with this hallway.
      */
-    public Hallway(Division origin, Division destination, IEvent event, double weight) {
+    public Hallway(Division origin, Division destination, int eventId, double weight) {
         this.origin = origin;
         this.destination = destination;
-        this.event = event;
+        this.eventId = eventId;
         this.weight = weight;
     }
 
@@ -81,8 +80,8 @@ public class Hallway {
      * Gets the random Event associated with this Hallway.
      * * @return The Event object, or null if there is none.
      */
-    public IEvent getEvent() {
-        return event;
+    public int getEventId() {
+        return eventId;
     }
 
     /**
@@ -93,7 +92,7 @@ public class Hallway {
      * * @param player The Player who is crossing the Hallway.
      */
     protected void activateEvent(Player player) {
-        if (this.event != null) {
+        if (this.eventId > 0) {
             // We assume the Event class has an 'applyEffect' method.
             // You will need to define what this action entails in the Event class.
             // this.event.applyEffect(player);
@@ -136,19 +135,7 @@ public class Hallway {
 
     
 
-    /**
-     * Generates a string representation of the Hallway.
-     * This is useful for debugging and generating reports.
-     * * @return A string detailing the connection and the associated event.
-     */
-    @Override
-    public String toString() {
-        String eventDescription = (event != null) ? event.toString() : "None";
-        return String.format("Hallway: %s <-> %s | Event: %s",
-                origin.getId(), // Assumes Divisao has a getName() method
-                destination.getId(),
-                eventDescription);
-    }
+
 
     /**
      * Compares this Hallway to another object for equality.
@@ -177,4 +164,12 @@ public class Hallway {
 
         return sameForward || sameBackward;
     }
+
+    @Override
+    public String toString() {
+        return "Hallway [origin=" + origin + ", destination=" + destination + ", eventId=" + eventId + ", weight="
+                + weight + "]";
+    }
+
+    
 }

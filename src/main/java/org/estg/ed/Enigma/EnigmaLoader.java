@@ -31,7 +31,7 @@ public class EnigmaLoader {
 
                 int correctOption = enigmaObj.getInt("correctOption");
 
-                Enigma enigma = new Enigma(id, question, options, correctOption);
+                Enigma enigma = new Enigma(question, options, correctOption);
                 enigmas.addToRear(enigma);
             }
         } catch (IOException e) {

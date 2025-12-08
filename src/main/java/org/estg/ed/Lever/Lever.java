@@ -11,8 +11,7 @@ public class Lever extends Content {
     private int correctOption;
     private static final int TOTAL_OPTIONS = 3;
 
-    public Lever(int idContent) {
-        super(idContent);
+    public Lever() {
         Random r = new Random();
         this.correctOption = r.nextInt(TOTAL_OPTIONS) + 1;
     }
@@ -26,7 +25,7 @@ public class Lever extends Content {
     @Override
     public boolean interactType(Player p) {
         if (isSolved()) {
-            System.out.println("The Lever " + getIdContent() + " is already active. The way is open.");
+            System.out.println("The Lever is already active. The way is open.");
             return true;
         }
 
@@ -46,5 +45,12 @@ public class Lever extends Content {
             return false;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Lever [correctOption=" + correctOption + "]";
+    }
+
+    
 
 }

@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import org.estg.ed.Divisions.Division;
+import org.estg.ed.Divisions.DivisionType;
 import org.estg.ed.Hall.Hallway;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,60 +13,71 @@ import org.json.JSONTokener;
 import Lists.ArrayUnorderedList;
 
 public class MazeLoader {
-    public static ArrayUnorderedList<Maze> loadMazeFromJSON(String filename) {
-
-        ArrayUnorderedList<Maze> mazes = new ArrayUnorderedList<>();
-
+ public static Maze loadMazeFromJSON(String filename) {
         try (FileReader reader = new FileReader(filename)) {
-
             JSONTokener tokener = new JSONTokener(reader);
             JSONObject root = new JSONObject(tokener);
 
             int id = root.getInt("id");
             String name = root.getString("name");
-            JSONArray entriesArray = root.getJSONArray("entries");
-            int[] entries = new int[entriesArray.length()];
-            for (int i = 0; i < entriesArray.length(); i++) {
-                entries[i] = entriesArray.getInt(i);
-            }
 
-            // Extrair as divisões
             JSONArray divisionsArray = root.getJSONArray("divisions");
             ArrayUnorderedList<Division> divisions = new ArrayUnorderedList<>();
+
             for (int i = 0; i < divisionsArray.length(); i++) {
                 JSONObject divisionObj = divisionsArray.getJSONObject(i);
                 int divisionId = divisionObj.getInt("id");
-                divisions.addToRear(new Division(divisionId));
+                int divisionType = divisionObj.getInt("type");
+
+                DivisionType dt = getDivisionType(divisionType);
+                divisions.addToRear(new Division(divisionId, dt));
             }
 
-            // Extrair a sala central
-            JSONObject centralRoomObj = root.getJSONObject("centralRoom");
-            int centralRoomId = centralRoomObj.getInt("id");
-
-            // Extrair os corredores (halls)
             JSONArray hallsArray = root.getJSONArray("halls");
             ArrayUnorderedList<Hallway> halls = new ArrayUnorderedList<>();
-            
+
             for (int i = 0; i < hallsArray.length(); i++) {
                 JSONObject hallObj = hallsArray.getJSONObject(i);
-
                 int from = hallObj.getInt("from");
                 int to = hallObj.getInt("to");
                 double weight = hallObj.getDouble("weight");
-                
-                //IEvent event = (IEvent)hallObj.getJSONObject("event"); 
-                
-                halls.addToRear(new Hallway(new Division(from), new Division(to), null, weight));
+                int eventId = hallObj.getInt("eventId");
 
+                halls.addToRear(new Hallway(findDivisionById(divisions, from), findDivisionById(divisions, to), eventId, weight));
             }
 
-            Maze maze = new Maze(id, name, halls, divisions, entries, centralRoomId);
-            mazes.addToRear(maze);
-
+            return new Maze(id, name, halls, divisions);
         } catch (IOException e) {
             System.err.println("Erro ao ler o ficheiro JSON: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Erro ao processar o ficheiro JSON: " + e.getMessage());
         }
+        return null;
+    }
 
-        return mazes;
+    private static Division findDivisionById(ArrayUnorderedList<Division> divisions, int id) {
+        for (Division division : divisions) {
+            if (division.getId() == id) {
+                return division;
+            }
+        }
+        return null;
+    }
+
+    private static DivisionType getDivisionType(int type) {
+        switch (type) {
+            case 1:
+                return DivisionType.ENTRY;
+            case 2:
+                return DivisionType.ENIGMA;
+            case 3:
+                return DivisionType.LEVER;
+            case 4:
+                return DivisionType.CENTRAL;
+            case 5:
+                return DivisionType.NULL;
+            default:
+                throw new IllegalArgumentException("Unknown division type: " + type);
+        }
     }
 }

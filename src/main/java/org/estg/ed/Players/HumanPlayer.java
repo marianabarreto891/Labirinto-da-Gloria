@@ -1,6 +1,5 @@
 package org.estg.ed.Players;
 
-import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -25,8 +24,8 @@ public class HumanPlayer extends Player {
      * 
      * @param initialPosition The entry Division where the player begins the game.
      */
-    public HumanPlayer(String name, Division initialPosition) {
-        super(name, initialPosition);
+    public HumanPlayer(String name, Division initialPosition, Scanner sc) {
+        super(name, initialPosition, sc);
     }
 
     @Override
@@ -35,14 +34,12 @@ public class HumanPlayer extends Player {
         for (int i = 0; i < options.length; i++) {
             System.out.println("[" + i + "] " + options[i]);
         }
-        Scanner sc = new Scanner(System.in);
         return sc.nextLine();
     }
 
     @Override
     public String answerLever() {
         System.out.println("Choose a number between 1 and 3 to activate the lever:");
-        Scanner sc = new Scanner(System.in);
         return sc.nextLine();
     }
 
@@ -62,61 +59,48 @@ public class HumanPlayer extends Player {
     @Override
     public Hallway chooseNextMove(DoublyLinkedUnorderedList<Hallway> availableHallways) {
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            int size = availableHallways.size();
+        int size = availableHallways.size();
 
-            if (size == 0) {
-                System.out.println(this.getName() + " has no available moves. Skipping turn.");
-                return null;
+        if (size == 0) {
+            System.out.println(this.getName() + " has no available moves. Skipping turn.");
+            return null;
+        }
+
+        Hallway[] hallwayOptions = new Hallway[size];
+        Hallway chosenHallway = null;
+
+        while (chosenHallway == null) {
+
+            Iterator<Hallway> iterator = availableHallways.iterator();
+            int i = 0;
+
+            System.out.println("\n" + this.getName() + " está em "
+                    + this.getCurrentDivision().getId() + ". Escolha um caminho:");
+
+            while (iterator.hasNext()) {
+                Hallway hallway = iterator.next();
+                hallwayOptions[i] = hallway;
+                System.out.println("[" + i + "] Ir para " + hallway.getDestination().getId()
+                        + " (" + hallway.toString() + ")");
+                i++;
             }
 
-            // Temporary array used to map the user's numeric choice (index) to the Hallway
-            // object
-            // since DoublyLinkedUnorderedList does not support O(1) random access
-            // (get(index)).
-            Hallway[] hallwayOptions = new Hallway[size];
+            System.out.print("Digite o número da sua escolha (0 a " + (size - 1) + "): ");
 
-            Hallway chosenHallway = null;
+            try {
+                int choiceIndex = Integer.parseInt(sc.nextLine());
 
-            while (chosenHallway == null) {
-
-                // 1. List options and populate the temporary array
-                Iterator<Hallway> iterator = availableHallways.iterator();
-                int i = 0;
-                System.out.println("\n" + this.getName() + " está em " + this.getCurrentDivision().getId()
-                        + ". Escolha um caminho:");
-
-                while (iterator.hasNext()) {
-                    Hallway hallway = iterator.next();
-                    hallwayOptions[i] = hallway; // Store reference in the temporary array
-                    System.out.println("[" + i + "] Ir para " + hallway.getDestination().getId() + " ("
-                            + hallway.toString() + ")");
-                    i++;
+                if (choiceIndex >= 0 && choiceIndex < hallwayOptions.length) {
+                    return hallwayOptions[choiceIndex];
+                } else {
+                    System.out.println("Opção inválida.");
                 }
-
-                // 2. Request Input
-                System.out.print("Digite o número da sua escolha (0 a " + (size - 1) + "): ");
-
-                try {
-                    int choiceIndex = scanner.nextInt();
-
-                    // 3. Validate input and return chosen Hallway from the array
-                    if (choiceIndex >= 0 && choiceIndex < hallwayOptions.length) {
-                        chosenHallway = hallwayOptions[choiceIndex];
-                        return chosenHallway; // Valid choice found
-                    } else {
-                        System.out.println("Opção inválida: O número está fora do intervalo permitido.");
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Entrada inválida: Por favor, digite apenas um número inteiro.");
-                    scanner.nextLine(); // Clear scanner buffer
-                } catch (Exception e) {
-                    System.out.println("Ocorreu um erro inesperado durante a leitura: " + e.getMessage());
-                    return null;
-                }
+            } catch (Exception e) {
+                System.out.println("Entrada inválida. Tente novamente.");
             }
-        } // Scanner is automatically closed here
+        }
 
-        return null; // Should ideally be unreachable
+        return null;
     }
+
 }
