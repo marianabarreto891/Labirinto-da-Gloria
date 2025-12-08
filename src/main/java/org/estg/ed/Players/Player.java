@@ -313,7 +313,7 @@ public abstract class Player implements Comparable<Player> {
 
         json.append("  \"turnsBlockedTotal\": ").append(this.totalTurnsBlockedAccumulated).append(",\n");
         json.append("  \"enigmasSolved\": ").append(this.enigmasSolvedCount).append(",\n");
-        //json.append("  \"winner\": ").append(currentPosition.isCentralRoom() ? "true" : "false").append("\n");
+      //  json.append("  \"winner\": ").append(currentPosition.isCentralRoom() ? "true" : "false").append("\n");
 
         json.append("}");
         return json.toString();
