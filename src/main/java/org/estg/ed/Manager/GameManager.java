@@ -98,7 +98,11 @@ public class GameManager {
             // Obter o peso da aresta entre currentDivision e neighbor
             double weight = mazeNetwork.shortestPathWeight(currentDivision, neighbor);
             if (weight < Double.POSITIVE_INFINITY) {
-                Hallway hallway = new Hallway(currentDivision, neighbor, 0, weight);
+                Hallway hallway = new Hallway(
+                        currentDivision,
+                        neighbor,
+                        0,
+                        weight);
                 availableHallways.addToRear(hallway);
             }
         }
@@ -112,6 +116,7 @@ public class GameManager {
         Hallway chosenHallway = player.chooseNextMove(availableHallways);
         if (chosenHallway != null) {
             player.moveTo(chosenHallway.getDestination(), chosenHallway);
+            chosenHallway.activateEvent(player);
         } else {
             System.out.println("No available moves. Skipping turn.");
         }

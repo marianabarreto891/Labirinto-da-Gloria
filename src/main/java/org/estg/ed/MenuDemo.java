@@ -1,19 +1,9 @@
 package org.estg.ed;
 
-import java.util.Iterator;
 import java.util.Scanner;
 
-import org.estg.ed.Divisions.Division;
-import org.estg.ed.Graph.MazeGraphConverter;
-import org.estg.ed.Manager.GameManager;
 import org.estg.ed.Maze.Maze;
-import org.estg.ed.Maze.MazeManager;
-import org.estg.ed.Players.BotPlayer;
-import org.estg.ed.Players.HumanPlayer;
-import org.estg.ed.Players.Player;
-
-import Graphs.Network;
-import Lists.ArrayUnorderedList;
+import org.estg.ed.Maze.MazeLoader;
 
 /**
  *
@@ -26,7 +16,7 @@ public class MenuDemo {
 
         String mapa = "C:\\Users\\maria\\TP_ED_8240344_8240334\\src\\main\\java\\org\\estg\\ed\\files_labirintos\\mapa.json";
         String enigmas = "C:\\Users\\maria\\TP_ED_8240344_8240334\\src\\main\\java\\org\\estg\\ed\\files_enigmas\\enigmas.json";
-
+/*
         MazeManager mazeManager = new MazeManager();
         Maze maze = mazeManager.loadMazeWithContents(mapa, enigmas);
 
@@ -49,5 +39,17 @@ public class MenuDemo {
         // Iniciar o jogo
         GameManager gameManager = new GameManager(mazeNetwork, players, centralRoom);
         gameManager.startGame();
+
+         */
+
+
+
+
+
+        String caminhoFicheiro = "C:\\Users\\maria\\TP_ED_8240344_8240334\\src\\main\\java\\org\\estg\\ed\\files_labirintos\\mapa.json";
+        Maze m = MazeLoader.loadMazeFromJSON(caminhoFicheiro);
+
+        System.out.println(m);
+
     }
 }

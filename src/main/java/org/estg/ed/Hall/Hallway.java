@@ -1,6 +1,7 @@
 package org.estg.ed.Hall;
 
 import org.estg.ed.Divisions.Division;
+import org.estg.ed.Events.Event;
 import org.estg.ed.Players.Player;
 
 /**
@@ -26,7 +27,8 @@ public class Hallway {
      * These events can include gaining extra moves, swapping positions, moving
      * back, etc..
      */
-    private final int eventId;
+    private Event event;
+    private int eventId;
 
     /**
      * The weight or cost associated with traversing this Hallway.
@@ -44,6 +46,13 @@ public class Hallway {
      * @param destination The ending Division of the path.
      * @param event       The random Event associated with this hallway.
      */
+    public Hallway(Division origin, Division destination, Event event, double weight) {
+        this.origin = origin;
+        this.destination = destination;
+        this.event = event;
+        this.weight = weight;
+    }
+
     public Hallway(Division origin, Division destination, int eventId, double weight) {
         this.origin = origin;
         this.destination = destination;
@@ -80,8 +89,8 @@ public class Hallway {
      * Gets the random Event associated with this Hallway.
      * * @return The Event object, or null if there is none.
      */
-    public int getEventId() {
-        return eventId;
+    public Event getEvent() {
+        return event;
     }
 
     /**
@@ -91,12 +100,10 @@ public class Hallway {
      * swapping positions, moving back, or being blocked from playing.
      * * @param player The Player who is crossing the Hallway.
      */
-    protected void activateEvent(Player player) {
-        if (this.eventId > 0) {
-            // We assume the Event class has an 'applyEffect' method.
-            // You will need to define what this action entails in the Event class.
-            // this.event.applyEffect(player);
+    public void activateEvent(Player player) {
+        if (this.event != null) {
             System.out.println(" Random event activated in the hallway! Effect applied to " + player.getName());
+            event.applyEffect(player);
         } else {
             System.out.println("Safe path. No random event occurred.");
         }
@@ -133,10 +140,6 @@ public class Hallway {
         }
     }
 
-    
-
-
-
     /**
      * Compares this Hallway to another object for equality.
      * In an undirected maze (graph), two hallways are considered equal if they
@@ -158,7 +161,6 @@ public class Hallway {
 
         Hallway other = (Hallway) obj;
 
-        
         boolean sameForward = this.origin.equals(other.origin) && this.destination.equals(other.destination);
         boolean sameBackward = this.origin.equals(other.destination) && this.destination.equals(other.origin);
 
@@ -167,9 +169,10 @@ public class Hallway {
 
     @Override
     public String toString() {
-        return "Hallway [origin=" + origin + ", destination=" + destination + ", eventId=" + eventId + ", weight="
-                + weight + "]";
+        return "Hallway [origin=" + origin +
+                ", destination=" + destination +
+                ", event=" + (event == null ? "None" : event.getDescription()) +
+                ", weight=" + weight + "]";
     }
 
-    
 }

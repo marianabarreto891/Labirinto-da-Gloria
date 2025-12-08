@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.estg.ed.Divisions.Division;
 import org.estg.ed.Divisions.DivisionType;
 import org.estg.ed.Hall.Hallway;
+import org.estg.ed.Hall.HallwayManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -13,7 +14,7 @@ import org.json.JSONTokener;
 import Lists.ArrayUnorderedList;
 
 public class MazeLoader {
- public static Maze loadMazeFromJSON(String filename) {
+    public static Maze loadMazeFromJSON(String filename) {
         try (FileReader reader = new FileReader(filename)) {
             JSONTokener tokener = new JSONTokener(reader);
             JSONObject root = new JSONObject(tokener);
@@ -43,7 +44,12 @@ public class MazeLoader {
                 double weight = hallObj.getDouble("weight");
                 int eventId = hallObj.getInt("eventId");
 
-                halls.addToRear(new Hallway(findDivisionById(divisions, from), findDivisionById(divisions, to), eventId, weight));
+                halls.addToRear(
+                        HallwayManager.createHallway(
+                                findDivisionById(divisions, from),
+                                findDivisionById(divisions, to),
+                                eventId,
+                                weight));
             }
 
             return new Maze(id, name, halls, divisions);
