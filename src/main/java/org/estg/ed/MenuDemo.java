@@ -25,8 +25,8 @@ public class MenuDemo {
 
     public static void main(String[] args) {
 
-        String mapa = "C:\\Users\\maria\\TP_ED_8240344_8240334\\src\\main\\java\\org\\estg\\ed\\files_labirintos\\mapa.json";
-        String enigmas = "C:\\Users\\maria\\TP_ED_8240344_8240334\\src\\main\\java\\org\\estg\\ed\\files_enigmas\\enigmas.json";
+        String mapa = "C:\\Users\\Joana\\TP_ED_8240344_8240334\\src\\main\\java\\org\\estg\\ed\\files_labirintos\\mapa.json";
+        String enigmas = "C:\\Users\\Joana\\TP_ED_8240344_8240334\\src\\main\\java\\org\\estg\\ed\\files_enigmas\\enigmas.json";
 
         Maze m = MazeLoader.loadMazeFromJSON(mapa);
 
@@ -47,7 +47,7 @@ public class MenuDemo {
 
         Division centralRoom = maze.getCentralRoom();
 
-        GameManager gameManager = new GameManager(mazeNetwork, players, centralRoom);
+        GameManager gameManager = new GameManager(maze, players);
         gameManager.startGame();
 
     }

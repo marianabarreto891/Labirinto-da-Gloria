@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import org.estg.ed.Divisions.Division;
 import org.estg.ed.Events.SwapPositionEvent;
+import org.estg.ed.Events.Event;
 import org.estg.ed.Hall.Hallway;
 
 import Exceptions.EmptyCollectionException;
@@ -241,6 +242,20 @@ public abstract class Player implements Comparable<Player> {
         this.pathHistory.addToRear(event);
 
         System.out.println("LOG: Swap registered for " + this.name + " from " + oldPosition.getId() + " to "
+                + this.currentPosition.getId());
+    }
+
+    /**
+     * Overload que permite registar um evento genérico que alterou a posição do jogador.
+     * Usado por eventos como SwapAllPositionsEvent.
+     *
+     * @param event The Event object that caused the position change.
+     * @param oldPosition The Division the player was at before the change.
+     */
+    public void registerEventPositionChange(Event event, Division oldPosition) {
+        this.pathHistory.addToRear(event);
+
+        System.out.println("LOG: Event registered for " + this.name + " from " + oldPosition.getId() + " to "
                 + this.currentPosition.getId());
     }
 

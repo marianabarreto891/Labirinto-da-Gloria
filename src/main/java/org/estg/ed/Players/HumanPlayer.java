@@ -105,8 +105,9 @@ public class HumanPlayer extends Player {
             try {
                 int choiceIndex = Integer.parseInt(sc.nextLine());
 
-                if (choiceIndex >= 0 && choiceIndex < hallwayOptions.length) {
-                    return hallwayOptions[choiceIndex];
+                if (choiceIndex > 0 && choiceIndex <= hallwayOptions.length) {
+                    return hallwayOptions[choiceIndex - 1];  
+
                 } else {
                     System.out.println("Invalid Number");
                 }
