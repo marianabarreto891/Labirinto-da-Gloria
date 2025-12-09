@@ -13,7 +13,25 @@ import org.json.JSONTokener;
 
 import Lists.ArrayUnorderedList;
 
+
+/**
+ * Class responsible for loading and parsing the maze structure from a JSON file.
+ *
+ * This class handles the deserialization of map data, converting raw JSON objects
+ * into the game's internal graph representation (Maze, Divisions, and Hallways).
+ */
 public class MazeLoader {
+
+    /**
+     * Parses a JSON file to create a fully initialized Maze object.
+     *
+     * This method reads the file, extracts maze metadata (id, name), instantiates
+     * all Division objects (nodes) with their specific types, and establishes
+     * Hallway connections (edges) between them.
+     *
+     * @param filename The path to the JSON file containing the maze definition.
+     * @return A constructed Maze object containing all divisions and hallways, or null if an error occurs.
+     */
     public static Maze loadMazeFromJSON(String filename) {
         try (FileReader reader = new FileReader(filename)) {
             JSONTokener tokener = new JSONTokener(reader);
@@ -53,14 +71,27 @@ public class MazeLoader {
             }
 
             return new Maze(id, name, halls, divisions);
+
         } catch (IOException e) {
-            System.err.println("Erro ao ler o ficheiro JSON: " + e.getMessage());
+            System.err.println("Error reading JSON file: " + e.getMessage());
+
         } catch (Exception e) {
-            System.err.println("Erro ao processar o ficheiro JSON: " + e.getMessage());
+            System.err.println("Error processing JSON file: " + e.getMessage());
         }
         return null;
     }
 
+
+    /**
+     * Auxiliary method to find a loaded Division object by its unique identifier.
+     *
+     * This is essential for linking Hallways to specific Division instances during
+     * graph construction, as the JSON only provides integer references.
+     *
+     * @param divisions The list of already loaded divisions.
+     * @param id        The ID of the division to find.
+     * @return The matching Division object, or null if not found.
+     */
     private static Division findDivisionById(ArrayUnorderedList<Division> divisions, int id) {
         for (Division division : divisions) {
             if (division.getId() == id) {
@@ -70,6 +101,15 @@ public class MazeLoader {
         return null;
     }
 
+
+    /**
+     * Converts the integer representation of a division type from JSON into the internal Enum.
+     *
+     *
+     * @param type The integer code read from the JSON.
+     * @return The corresponding DivisionType enum.
+     * @throws IllegalArgumentException if the type code is not recognized.
+     */
     private static DivisionType getDivisionType(int type) {
         switch (type) {
             case 1:

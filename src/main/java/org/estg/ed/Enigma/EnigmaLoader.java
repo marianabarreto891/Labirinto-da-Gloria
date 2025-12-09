@@ -9,7 +9,24 @@ import org.json.JSONTokener;
 
 import Lists.ArrayUnorderedList;
 
+/**
+ * Utility class responsible for loading and parsing Enigma definitions from a JSON file.
+ *
+ * This class handles the deserialization of game content, converting raw JSON data
+ * into usable Enigma objects that can be distributed throughout the maze.
+ */
 public class EnigmaLoader {
+    
+    /**
+     * Parses a JSON file to create a list of Enigma objects.
+     *
+     * This method reads the specified file, extracts the 'enigmas' array,
+     * and iterates through it to parse the ID, question text, options, and the correct answer index
+     * for each entry. It then constructs Enigma instances and adds them to a list.
+     *
+     * @param filename The path to the JSON file containing the enigma definitions.
+     * @return An unordered list containing the loaded Enigma objects.
+     */
     public static ArrayUnorderedList<Enigma> loadEnigmasFromJSON(String filename) {
 
         ArrayUnorderedList<Enigma> enigmas = new ArrayUnorderedList<Enigma>();
@@ -35,7 +52,7 @@ public class EnigmaLoader {
                 enigmas.addToRear(enigma);
             }
         } catch (IOException e) {
-            System.err.println("Erro ao ler o ficheiro JSON: " + e.getMessage());
+            System.err.println("Error reading JSON file: " + e.getMessage());
         }
 
         return enigmas;

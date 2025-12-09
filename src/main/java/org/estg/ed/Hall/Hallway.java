@@ -11,38 +11,18 @@ import org.estg.ed.Players.Player;
  */
 public class Hallway {
 
-    /**
-     * The Division from which the Hallway starts.
-     */
     private final Division origin;
-
-    /**
-     * The Division to which the Hallway leads.
-     */
     private final Division destination;
-
-    /**
-     * The random event that can occur when crossing the hallway.
-     * It can be null if no event is associated.
-     * These events can include gaining extra moves, swapping positions, moving
-     * back, etc..
-     */
     private Event event;
     private int eventId;
-
-    /**
-     * The weight or cost associated with traversing this Hallway.
-     * This can represent distance, difficulty, or any other metric relevant to the
-     * game.
-     */
     private final double weight;
 
     /**
      * Constructs a new Hallway connecting an origin Division to a destination
      * Division,
      * and associates an Event with it.
-     * * @param origin The starting Division of the path.
      * 
+     * @param origin The starting Division of the path.
      * @param destination The ending Division of the path.
      * @param event       The random Event associated with this hallway.
      */
@@ -53,6 +33,15 @@ public class Hallway {
         this.weight = weight;
     }
 
+
+    /**
+     * Constructs a new Hallway connecting two specific Divisions.
+     * 
+     * @param origin      The starting Division of this path.
+     * @param destination The ending Division of this path.
+     * @param eventId     The unique identifier of the random event associated with this hallway (or -1/0 if none).
+     * @param weight      The weight or cost associated with traversing this hallway.
+     */
     public Hallway(Division origin, Division destination, int eventId, double weight) {
         this.origin = origin;
         this.destination = destination;
@@ -71,7 +60,8 @@ public class Hallway {
 
     /**
      * Gets the origin Division of this Hallway.
-     * * @return The origin Division.
+     * 
+     * @return The origin Division.
      */
     public Division getOrigin() {
         return origin;
@@ -79,7 +69,8 @@ public class Hallway {
 
     /**
      * Gets the destination Division of this Hallway.
-     * * @return The destination Division.
+     * 
+     * @return The destination Division.
      */
     public Division getDestination() {
         return destination;
@@ -87,7 +78,8 @@ public class Hallway {
 
     /**
      * Gets the random Event associated with this Hallway.
-     * * @return The Event object, or null if there is none.
+     * 
+     * @return The Event object, or null if there is none.
      */
     public Event getEvent() {
         return event;
@@ -98,7 +90,8 @@ public class Hallway {
      * This method invokes the Event's logic to apply effects, such as gaining extra
      * moves,
      * swapping positions, moving back, or being blocked from playing.
-     * * @param player The Player who is crossing the Hallway.
+     * 
+     * @param player The Player who is crossing the Hallway.
      */
     public void activateEvent(Player player) {
         if (this.event != null) {
@@ -112,8 +105,8 @@ public class Hallway {
     /**
      * Checks if this Hallway connects to the specified Division.
      * Useful for traversing the graph's connections.
-     * * @param division The Division to be checked (if it's origin or destination).
      * 
+     * @param division The Division to be checked (if it's origin or destination).
      * @return true if the Division is either the origin or destination of this
      *         Hallway, false otherwise.
      */
@@ -124,8 +117,8 @@ public class Hallway {
     /**
      * Returns the Division opposite to the one provided.
      * Useful for navigating the maze from a known Division.
-     * * @param division The Player's current Division.
      * 
+     * @param division The Player's current Division.
      * @return The Division to which the Hallway leads, or null if the provided
      *         Division
      *         does not belong to this Hallway.
@@ -136,7 +129,7 @@ public class Hallway {
         } else if (destination.equals(division)) {
             return origin;
         } else {
-            return null; // The provided Division does not belong to this Hallway
+            return null; 
         }
     }
 
@@ -146,8 +139,8 @@ public class Hallway {
      * connect
      * the same two divisions, regardless of which division is designated as
      * 'origin' or 'destination'.
-     * * @param obj The object to compare with.
      * 
+     * @param obj The object to compare with.
      * @return true if the objects are functionally equal, false otherwise.
      */
     @Override
@@ -167,6 +160,14 @@ public class Hallway {
         return sameForward || sameBackward;
     }
 
+    /**
+     * Returns a string representation of this Hallway.
+     *
+     * The returned string includes the origin and destination divisions, the weight, 
+     * and a description of the event (or "None" if no event is associated).
+     *
+     * @return A formatted string describing the current state of the hallway.
+     */
     @Override
     public String toString() {
         return "Hallway [origin=" + origin +

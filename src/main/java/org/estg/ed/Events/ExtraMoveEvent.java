@@ -20,17 +20,17 @@ public class ExtraMoveEvent extends Event {
 
     /**
      * Applies the effect by calling the necessary method on the Player object to increment their move count.
-     * [cite_start]This effect modifies the player's internal state to allow immediate extra turns[cite: 38].
+     * This effect modifies the player's internal state to allow immediate extra turns.
      * * @param player The Player affected by the event.
      */
     @Override
     public void applyEffect(Player player) {
-        player.addExtraMoves(extraMoves); // This method must exist in the Player class
+        player.addExtraMoves(extraMoves); 
     }
 
     /**
      * Returns a string describing the event's action and impact.
-     * * @return Description of the event (e.g., "Gained 2 extra move(s)!").
+     * * @return Description of the event.
      */
     @Override
     public String getDescription() {

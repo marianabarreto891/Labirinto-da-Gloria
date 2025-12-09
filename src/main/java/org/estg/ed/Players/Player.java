@@ -58,7 +58,8 @@ public abstract class Player implements Comparable<Player> {
 
     /**
      * Gets the immutable name of the player.
-     * * @return The player's name.
+     * 
+     * @return The player's name.
      */
     public String getName() {
         return name;
@@ -66,7 +67,8 @@ public abstract class Player implements Comparable<Player> {
 
     /**
      * Gets the current Division the player is occupying.
-     * * @return The current Division object.
+     * 
+     * @return The current Division object.
      */
     public Division getCurrentDivision() {
         return currentPosition;
@@ -75,7 +77,8 @@ public abstract class Player implements Comparable<Player> {
     /**
      * Updates the player's current position. Used primarily by the Game controller
      * or the SwapPositionEvent logic (where recoil position should not be updated).
-     * * @param newPosition The Division the player is moving to.
+     * 
+     * @param newPosition The Division the player is moving to.
      */
     public void setCurrentDivision(Division newPosition) {
         this.currentPosition = newPosition;
@@ -85,7 +88,8 @@ public abstract class Player implements Comparable<Player> {
      * Checks if the player is allowed to move this turn, managing the block
      * duration. If blocked, the turn is skipped, and the block duration is
      * decremented.
-     * * @return True if the player is free to play this turn, false if blocked.
+     * 
+     * @return True if the player is free to play this turn, false if blocked.
      */
     public boolean canPlay() {
         if (this.turnsBlocked > 0) {
@@ -98,7 +102,8 @@ public abstract class Player implements Comparable<Player> {
 
     /**
      * Checks if the player has extra moves to use this turn.
-     * * @return The number of extra moves available.
+     * 
+     * @return The number of extra moves available.
      */
     public int getExtraMoves() {
         return extraMoves;
@@ -123,24 +128,25 @@ public abstract class Player implements Comparable<Player> {
     /**
      * Attempts to move the player to a new destination, updating the path history
      * and recording the previous position as the safe recoil position.
-     * * @param destination The target Division for the movement.
      * 
+     * @param destination The target Division for the movement.
      * @param hallway The Hallway traversed to reach the destination.
      */
     public void moveTo(Division destination, Hallway hallway) {
-        // The current position becomes the safe point for potential recoil effects.
+       
         this.previousRecoilPosition = this.currentPosition;
 
         this.currentPosition = destination;
-        this.pathHistory.addToRear(hallway); // Register the hallway
-        this.pathHistory.addToRear(destination); // Register the new division
+        this.pathHistory.addToRear(hallway); 
+        this.pathHistory.addToRear(destination); 
     }
 
     /**
      * Required by SkipTurnEvent. Sets the number of turns the player must skip.
      * Updates both the current block counter and the total accumulated blocked
      * turns for reporting.
-     * * @param turns The number of turns to skip.
+     * 
+     * @param turns The number of turns to skip.
      */
     public void setTurnsToSkip(int turns) {
         this.turnsBlocked += turns;
@@ -150,7 +156,8 @@ public abstract class Player implements Comparable<Player> {
 
     /**
      * Required by ExtraMoveEvent. Grants the player additional moves.
-     * * @param moves The number of extra moves gained.
+     * 
+     * @param moves The number of extra moves gained.
      */
     public void addExtraMoves(int moves) {
         this.extraMoves += moves;
@@ -160,10 +167,10 @@ public abstract class Player implements Comparable<Player> {
     /**
      * Implements the logic to force the player to move back, removing steps from
      * the path history.
-     * The move is strictly limited by the {@code previousRecoilPosition} (the
+     * The move is strictly limited by the previousRecoilPosition (the
      * position before the last swap or move).
-     * * @param numberOfDivisions The number of divisions (pairs of Hallway +
-     * Divisao) to move back.
+     * 
+     * @param numberOfDivisions The number of divisions to move back.
      */
     public void moveBack(int numberOfDivisions) {
         int divisionsReceded = 0;
@@ -172,8 +179,7 @@ public abstract class Player implements Comparable<Player> {
                 + this.previousRecoilPosition.getId() + ".");
 
         try {
-            // --- Step 1: Handle non-movement events (like Swap) at the end of the history
-            // ---
+            
             while (this.pathHistory.size() > 1 && !(this.pathHistory.last() instanceof Division)
                     && !(this.pathHistory.last() instanceof Hallway)) {
                 Object removedEvent = this.pathHistory.removeLast();
@@ -181,26 +187,22 @@ public abstract class Player implements Comparable<Player> {
                         "LOG: Evento " + removedEvent.getClass().getSimpleName() + " removido antes do recuo.");
             }
 
-            // 1. Loop de Recuo (Removes pairs of Divisao + Hallway)
             while (divisionsReceded < numberOfDivisions && this.pathHistory.size() > 1) {
 
-                // --- 1. Check/Peek the current last Division ---
+                
                 Object lastElement = this.pathHistory.last();
 
                 if (lastElement instanceof Division lastDivisao) {
 
-                    // 2. Check the Recoil Limit
                     if (lastDivisao.equals(this.previousRecoilPosition)) {
                         System.out.println(this.name + " reached the recoil limit ("
                                 + this.previousRecoilPosition.getId() + "). Stopping move back.");
                         break;
                     }
 
-                    // If not the limit: remove the Division and the Hallway
-                    this.pathHistory.removeLast(); // Remove the Division
-                    this.pathHistory.removeLast(); // Remove the Hallway
+                    this.pathHistory.removeLast(); 
+                    this.pathHistory.removeLast(); 
 
-                    // --- 3. Update Current Position ---
                     Object newPosition = this.pathHistory.last();
 
                     if (newPosition instanceof Division divisao) {
@@ -209,9 +211,8 @@ public abstract class Player implements Comparable<Player> {
                         System.out.println(this.name + " receded to " + this.currentPosition.getId() + " ("
                                 + divisionsReceded + "/" + numberOfDivisions + ").");
                     } else {
-                        // Error: Path History is corrupted (Hallway found instead of Divisao)
                         System.err.println(
-                                "Error: Path History is corrupted (Expected Divisao, found Hallway). Stopping move back.");
+                                "Error: Path History is corrupted. Stopping move back.");
                         break;
                     }
                 }
@@ -230,14 +231,13 @@ public abstract class Player implements Comparable<Player> {
      * history.
      * This method is used when the player's position is changed externally,
      * ensuring
-     * the {@code previousRecoilPosition} remains untouched.
-     * * @param event The event object that caused the position change
-     * (SwapPositionEvent).
+     * the previousRecoilPosition remains untouched.
      * 
+     * @param event The event object that caused the position change
+     * (SwapPositionEvent).
      * @param oldPosition The Divisao the player was at before the swap.
      */
     public void registerEventPositionChange(SwapPositionEvent event, Division oldPosition) {
-        // Registers the event in the history (necessary for the final JSON report).
         this.pathHistory.addToRear(event);
 
         System.out.println("LOG: Swap registered for " + this.name + " from " + oldPosition.getId() + " to "
@@ -246,7 +246,8 @@ public abstract class Player implements Comparable<Player> {
 
     /**
      * Returns the number of elements currently recorded in the path history.
-     * * @return The size of the pathHistory list.
+     * 
+     * @return The size of the pathHistory list.
      */
     public int getPathHistorySize() {
         return this.pathHistory.size();
@@ -254,10 +255,9 @@ public abstract class Player implements Comparable<Player> {
 
     /**
      * Defines how the player chooses their next move.
-     * The implementation varies by concrete subclass: Human (I/O) or Bot
-     * (Algorithm).
-     * * @param availableHallways The hallways available from the current position.
+     * The implementation varies by concrete subclass: Human or Bot.
      * 
+     * @param availableHallways The hallways available from the current position.
      * @return The chosen Hallway for the next move.
      */
     public abstract Hallway chooseNextMove(DoublyLinkedUnorderedList<Hallway> availableHallways);
@@ -275,27 +275,24 @@ public abstract class Player implements Comparable<Player> {
      */
     @Override
     public int compareTo(Player other) {
-        // 1. Primary Criterion: Enigmas Solved Count (Higher is better - Descending
-        // order)
         if (this.enigmasSolvedCount != other.enigmasSolvedCount) {
             return other.enigmasSolvedCount - this.enigmasSolvedCount;
         }
 
-        // 2. Secondary Criterion: Total Turns Blocked (Lower is better - Ascending
-        // order)
         if (this.totalTurnsBlockedAccumulated != other.totalTurnsBlockedAccumulated) {
             return this.totalTurnsBlockedAccumulated - other.totalTurnsBlockedAccumulated;
         }
 
-        // 3. Final Tiebreaker: Player Name (Alphabetical order)
-        return this.name.compareTo(other.name);
+    return this.name.compareTo(other.name);
+
     }
 
     /**
-     * [cite_start]Generates a complete record of the player's journey in JSON
+     * Generates a complete record of the player's journey in JSON
      * format.
      * Includes path history, obstacles faced, enigmas solved, and effects applied.
-     * * @return A JSON formatted String representing the player's game record.
+     * 
+     * @return A JSON formatted String representing the player's game record.
      */
     public String generateJSONReport() {
         StringBuilder json = new StringBuilder();
@@ -305,7 +302,6 @@ public abstract class Player implements Comparable<Player> {
 
         json.append("  \"pathHistory\": [\n");
 
-        // Uses the iterator provided by the DoublyLinkedUnorderedList
         Iterator<Object> iterator = this.pathHistory.iterator();
 
         while (iterator.hasNext()) {
@@ -322,7 +318,7 @@ public abstract class Player implements Comparable<Player> {
             }
             json.append("\n");
         }
-        json.append("  ],\n"); // End of pathHistory
+        json.append("  ],\n");
 
         json.append("  \"turnsBlockedTotal\": ").append(this.totalTurnsBlockedAccumulated).append(",\n");
         json.append("  \"enigmasSolved\": ").append(this.enigmasSolvedCount).append(",\n");
@@ -331,10 +327,6 @@ public abstract class Player implements Comparable<Player> {
 
         json.append("}");
         return json.toString();
-    }
-
-    public boolean isBot() {
-        return false;
     }
 
 }

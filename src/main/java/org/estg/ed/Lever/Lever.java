@@ -6,22 +6,47 @@ import org.estg.ed.Content.Content;
 import org.estg.ed.Divisions.DivisionType;
 import org.estg.ed.Players.Player;
 
+/**
+ * Represents a Lever obstacle within a room in the maze.
+ *
+ * This class extends the generic Content to provide specific logic. A lever requires the player to guess a number to "activate" it, typically
+ * opening a blocked path or allowing progress.
+ */
 public class Lever extends Content {
 
     private int correctOption;
     private static final int TOTAL_OPTIONS = 3;
 
+
+    /**
+     * Create a new Lever.
+     *
+     * Initializes the lever by generating a random integer between 1 and TOTAL_OPTIONS
+     * which serves as the "key" to unlock it.
+     */
     public Lever() {
         Random r = new Random();
         this.correctOption = r.nextInt(TOTAL_OPTIONS) + 1;
     }
 
+
+    /**
+     * Identifies the specific type of this content.
+     *
+     * @return The enum constant DivisionType.LEVER.
+     */
     @Override
     public DivisionType getType() {
         return DivisionType.LEVER;
     }
 
-    
+    /**
+     * Represents the interaction logic between a player and this lever.
+     *
+     *
+     * @param p The player attempting to activate the lever.
+     * @return true if the interaction results in success (lever activated), false otherwise.
+     */
     @Override
     public boolean interactType(Player p) {
         if (isSolved()) {
@@ -46,6 +71,14 @@ public class Lever extends Content {
         }
     }
 
+
+    /**
+     * Returns a string representation of the Lever.
+     *
+     * Includes the correct option required to solve it.
+     *
+     * @return A formatted string describing the lever's state.
+     */
     @Override
     public String toString() {
         return "Lever [correctOption=" + correctOption + "]";

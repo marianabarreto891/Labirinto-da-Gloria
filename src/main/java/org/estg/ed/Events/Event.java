@@ -29,7 +29,7 @@ public abstract class Event implements IEvent {
     
     /**
      * Provides a string representation of the event, typically used for logging and debugging.
-     * It delegates the representation to the {@code getDescription()} method.
+     * It delegates the representation to the getDescription() method.
      * * @return A descriptive string of the event.
      */
     @Override

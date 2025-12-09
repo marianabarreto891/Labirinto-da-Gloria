@@ -9,10 +9,6 @@ import org.estg.ed.Content.Content;
  */
 public class Division {
 
-    /**
-     * The unique identifier for this division.
-     * This ID corresponds to the value defined in the JSON map file.
-     */
     private final int id;
 
     private DivisionType dt;
@@ -65,14 +61,29 @@ public class Division {
         return id == division.id;
     }
 
+    /**
+     * Retrieves the classification type of this division.
+     *
+     * @return The DivisionType enum value.
+     */
     public DivisionType getDt() {
         return dt;
     }
 
+    /**
+     * Updates the classification type of this division.
+     *
+     * @param dt The new DivisionType to assign.
+     */
     public void setDt(DivisionType dt) {
         this.dt = dt;
     }
 
+    /**
+     * Returns a string representation of the Division.
+     *
+     * @return A formatted string describing the division.
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

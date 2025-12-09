@@ -44,6 +44,12 @@ public abstract class Content {
         this.solved = isSolved;
     }
 
+
+    /**
+     * Returns a string representation of this Content instance.
+     *
+     * @return A formatted string describing the content's current state.
+     */
     @Override
     public String toString() {
         return "Content [solved=" + solved + ", toString()=" + super.toString() + "]";
