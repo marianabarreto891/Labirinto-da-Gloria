@@ -135,7 +135,6 @@ public abstract class Player implements Comparable<Player> {
     public void moveTo(Division destination, Hallway hallway) {
        
         this.previousRecoilPosition = this.currentPosition;
-
         this.currentPosition = destination;
         this.pathHistory.addToRear(hallway); 
         this.pathHistory.addToRear(destination); 

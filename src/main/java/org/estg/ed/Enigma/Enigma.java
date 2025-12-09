@@ -4,28 +4,30 @@ import org.estg.ed.Content.Content;
 import org.estg.ed.Divisions.DivisionType;
 import org.estg.ed.Players.Player;
 
-
 /**
  * Represents a question within the maze.
  *
- * This class extends the generic Content to provide specific logic for question-and-answer
- * interactions. It holds a question, a list of possible options, and the index of the correct answer.
+ * This class extends the generic Content to provide specific logic for
+ * question-and-answer
+ * interactions. It holds a question, a list of possible options, and the index
+ * of the correct answer.
  */
 public class Enigma extends Content {
 
     private final int correctAnswer;
 
     private final String question;
-    
-    private final String options[];
 
+    private final String options[];
 
     /**
      * Create a new Enigma.
      *
-     * @param question      The text of the riddle or question to be presented to the player.
+     * @param question      The text of the riddle or question to be presented to
+     *                      the player.
      * @param options       An array of strings representing the possible choices.
-     * @param correctAnswer The integer index corresponding to the correct string in the options array.
+     * @param correctAnswer The integer index corresponding to the correct string in
+     *                      the options array.
      */
     public Enigma(String question, String options[], int correctAnswer) {
         this.question = question;
@@ -48,7 +50,8 @@ public class Enigma extends Content {
      * Represents the interaction logic between a player and this enigma.
      *
      * @param p The player attempting to solve the enigma.
-     * @return true if the interaction results in a success (solved), false if the answer was incorrect or invalid.
+     * @return true if the interaction results in a success (solved), false if the
+     *         answer was incorrect or invalid.
      */
     @Override
     public boolean interactType(Player p) {
@@ -75,7 +78,6 @@ public class Enigma extends Content {
         }
     }
 
-
     /**
      * Retrieves the text of the question.
      *
@@ -84,7 +86,6 @@ public class Enigma extends Content {
     public String getQuestion() {
         return question;
     }
-
 
     /**
      * Retrieves the index of the correct answer.
@@ -95,7 +96,6 @@ public class Enigma extends Content {
         return correctAnswer;
     }
 
-
     /**
      * Retrieves the list of possible answers.
      *
@@ -105,7 +105,6 @@ public class Enigma extends Content {
         return options;
     }
 
-
     /**
      * Returns a string representation of the Enigma.
      *
@@ -113,8 +112,10 @@ public class Enigma extends Content {
      */
     @Override
     public String toString() {
-
-        StringBuilder sb = new StringBuilder("[");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Enigma [question=").append(question)
+                .append(", correctAnswer=").append(correctAnswer)
+                .append(", options=[");
 
         for (int i = 0; i < options.length; i++) {
             sb.append(options[i]);
@@ -122,12 +123,9 @@ public class Enigma extends Content {
                 sb.append(", ");
             }
         }
-        sb.append("]");
 
-        return "Enigma [correctAnswer=" + correctAnswer
-                + ", question=" + question
-                + ", options=" + sb.toString()
-                + ", toString()=" + super.toString() + "]";
+        sb.append("], ").append(super.toString()).append("]");
+        return sb.toString();
     }
 
 }
