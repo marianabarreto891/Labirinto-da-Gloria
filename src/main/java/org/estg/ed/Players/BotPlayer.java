@@ -1,6 +1,7 @@
 package org.estg.ed.Players;
 
 import java.util.Iterator;
+import java.util.Scanner;
 
 import org.estg.ed.Divisions.Division;
 import org.estg.ed.Hall.Hallway;
@@ -19,19 +20,34 @@ public class BotPlayer extends Player {
     /**
      * Constructs a new BotPlayer instance, setting the initial state inherited from
      * the Player base class.
-     * * @param name The unique identifier of the bot.
      * 
+     * @param name The unique identifier of the bot.
      * @param initialPosition The entry Division where the bot begins the game.
      */
-    public BotPlayer(String name, Division initialPosition) {
-        super(name, initialPosition);
+    public BotPlayer(String name, Division initialPosition, Scanner sc) {
+        super(name, initialPosition, sc);
     }
 
+    
+    /**
+     * Simulates the bot attempting to solve an enigma.
+     *
+     *
+     * @param question The question.
+     * @param options  The array of possible answer choices.
+     * @return A string representing the index of the randomly selected option.
+     */
     @Override
     public String answerEnigma(String question, String[] options) {
         return String.valueOf((int) (Math.random() * options.length));
     }
 
+
+    /**
+     * Simulates the bot attempting to activate a lever.
+     *
+     * @return A string containing a random number from "1" to "3".
+     */
     @Override
     public String answerLever() {
         return String.valueOf((int) (Math.random() * 3) + 1);
@@ -45,10 +61,10 @@ public class BotPlayer extends Player {
      * * The strategy iterates through the list of available hallways until it finds
      * the hallway
      * corresponding to a randomly generated index.
-     * * * @param availableHallways The list of valid Hallways the player can choose
-     * from the current Division.
      * 
-     * @return The randomly chosen Hallway for the next movement, or {@code null} if
+     * @param availableHallways The list of valid Hallways the player can choose
+     * from the current Division. 
+     * @return The randomly chosen Hallway for the next movement, or null if
      *         no moves are available.
      */
     @Override
@@ -59,11 +75,8 @@ public class BotPlayer extends Player {
             return null;
         }
 
-        // 1. Choose a random index (from 0 to size - 1)
         int randomIndex = (int) (Math.random() * size);
 
-        // 2. Iterate until the element is found (O(N) operation, typical for linked
-        // lists)
         Hallway chosenHallway = null;
         Iterator<Hallway> iterator = availableHallways.iterator();
         int currentIndex = 0;
@@ -71,12 +84,22 @@ public class BotPlayer extends Player {
         while (iterator.hasNext()) {
             chosenHallway = iterator.next();
             if (currentIndex == randomIndex) {
-                return chosenHallway; // Found the randomly selected Hallway
+                return chosenHallway; 
             }
             currentIndex++;
         }
 
-        // Should theoretically not be reached if size > 0, but provides a fallback.
         return chosenHallway;
     }
+
+
+    /**
+     * Indicates whether the player is a bot.
+     *
+     * @return Always true for this class.
+     */
+    public boolean isBot() {
+        return true;
+    }
+
 }

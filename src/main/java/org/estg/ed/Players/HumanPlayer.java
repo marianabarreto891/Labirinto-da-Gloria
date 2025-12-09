@@ -1,6 +1,5 @@
 package org.estg.ed.Players;
 
-import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -13,36 +12,49 @@ import Lists.DoublyLinkedUnorderedList;
  * Represents a human-controlled player (Manual mode) in the Labyrinth of Glory
  * game simulator.
  * This class extends the abstract Player base and implements decision-making
- * logic based on user input (I/O interaction). [cite_start]It fulfills the
- * requirement for the Manual game mode[cite: 50].
+ * logic based on user input. It fulfills the
+ * requirement for the Manual game mode.
  */
 public class HumanPlayer extends Player {
 
     /**
      * Constructs a new HumanPlayer instance, setting the initial state inherited
      * from the Player base class.
-     * * @param name The unique identifier of the human player.
      * 
+     * @param name The unique identifier of the human player.
      * @param initialPosition The entry Division where the player begins the game.
      */
-    public HumanPlayer(String name, Division initialPosition) {
-        super(name, initialPosition);
+    public HumanPlayer(String name, Division initialPosition, Scanner sc) {
+        super(name, initialPosition, sc);
     }
 
+
+
+    /**
+     * Represents the interaction for solving an Enigma challenge.
+     *
+     * @param question The text of the riddle or question to be displayed.
+     * @param options  An array of strings representing the possible answers.
+     * @return The raw string input provided by the user via the scanner.
+     */
     @Override
     public String answerEnigma(String question, String[] options) {
         System.out.println(question);
         for (int i = 0; i < options.length; i++) {
             System.out.println("[" + i + "] " + options[i]);
         }
-        Scanner sc = new Scanner(System.in);
         return sc.nextLine();
     }
 
+
+    /**
+     * Reprsents the interaction for activating a Lever.
+     *
+     * @return The string input provided by the user representing their guess.
+     */
     @Override
     public String answerLever() {
         System.out.println("Choose a number between 1 and 3 to activate the lever:");
-        Scanner sc = new Scanner(System.in);
         return sc.nextLine();
     }
 
@@ -53,70 +65,67 @@ public class HumanPlayer extends Player {
      * Doubly Linked List
      * and uses a temporary array to map the user's selected index to the correct
      * Hallway object.
-     * * @param availableHallways The list of valid Hallways the player can choose
-     * from the current Division.
      * 
-     * @return The chosen Hallway for the next movement, or {@code null} if no moves
+     * @param availableHallways The list of valid Hallways the player can choose
+     * from the current Division.
+     * @return The chosen Hallway for the next movement, or null if no moves
      *         are available or if an unrecoverable error occurs.
      */
     @Override
     public Hallway chooseNextMove(DoublyLinkedUnorderedList<Hallway> availableHallways) {
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            int size = availableHallways.size();
+        int size = availableHallways.size();
 
-            if (size == 0) {
-                System.out.println(this.getName() + " has no available moves. Skipping turn.");
-                return null;
+        if (size == 0) {
+            System.out.println(this.getName() + " has no available moves. Skipping turn.");
+            return null;
+        }
+
+        Hallway[] hallwayOptions = new Hallway[size];
+        Hallway chosenHallway = null;
+
+        while (chosenHallway == null) {
+
+            Iterator<Hallway> iterator = availableHallways.iterator();
+            int i = 0;
+
+            System.out.println("\n" + this.getName() + " is in"
+                    + this.getCurrentDivision().getId() + ". Choose a path: ");
+
+            while (iterator.hasNext()) {
+                Hallway hallway = iterator.next();
+                hallwayOptions[i] = hallway;
+                System.out.println("[" + (i + 1) + "] Go to:  " + hallway.getDestination().getId()
+                        + " (" + hallway.toString() + ")");
+                i++;
             }
 
-            // Temporary array used to map the user's numeric choice (index) to the Hallway
-            // object
-            // since DoublyLinkedUnorderedList does not support O(1) random access
-            // (get(index)).
-            Hallway[] hallwayOptions = new Hallway[size];
+            System.out.print("Enter the number of your choice (1 a " + (size) + "): ");
 
-            Hallway chosenHallway = null;
+            try {
+                int choiceIndex = Integer.parseInt(sc.nextLine());
 
-            while (chosenHallway == null) {
-
-                // 1. List options and populate the temporary array
-                Iterator<Hallway> iterator = availableHallways.iterator();
-                int i = 0;
-                System.out.println("\n" + this.getName() + " está em " + this.getCurrentDivision().getId()
-                        + ". Escolha um caminho:");
-
-                while (iterator.hasNext()) {
-                    Hallway hallway = iterator.next();
-                    hallwayOptions[i] = hallway; // Store reference in the temporary array
-                    System.out.println("[" + i + "] Ir para " + hallway.getDestination().getId() + " ("
-                            + hallway.toString() + ")");
-                    i++;
+                if (choiceIndex >= 0 && choiceIndex < hallwayOptions.length) {
+                    return hallwayOptions[choiceIndex];
+                } else {
+                    System.out.println("Invalid Number");
                 }
 
-                // 2. Request Input
-                System.out.print("Digite o número da sua escolha (0 a " + (size - 1) + "): ");
-
-                try {
-                    int choiceIndex = scanner.nextInt();
-
-                    // 3. Validate input and return chosen Hallway from the array
-                    if (choiceIndex >= 0 && choiceIndex < hallwayOptions.length) {
-                        chosenHallway = hallwayOptions[choiceIndex];
-                        return chosenHallway; // Valid choice found
-                    } else {
-                        System.out.println("Opção inválida: O número está fora do intervalo permitido.");
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Entrada inválida: Por favor, digite apenas um número inteiro.");
-                    scanner.nextLine(); // Clear scanner buffer
-                } catch (Exception e) {
-                    System.out.println("Ocorreu um erro inesperado durante a leitura: " + e.getMessage());
-                    return null;
-                }
+            } catch (Exception e) {
+                System.out.println("Invalid entry. Please try again!");
             }
-        } // Scanner is automatically closed here
+        }
 
-        return null; // Should ideally be unreachable
+        return null;
+    }
+
+
+    /**
+     * Indicates whether the player is a bot.
+     * 
+     * @return Always false for this class.
+     */
+    public boolean isBot() {
+        return false;
     }
 }

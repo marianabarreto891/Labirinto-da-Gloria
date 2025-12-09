@@ -4,11 +4,9 @@ import org.estg.ed.Divisions.DivisionType;
 import org.estg.ed.Players.Player;
 
 public abstract class Content {
-    private final int idContent;
     private boolean solved;
 
-    public Content(int idContent) {
-        this.idContent = idContent;
+    public Content() {
         this.solved = false;
     }
 
@@ -25,15 +23,6 @@ public abstract class Content {
      * @return true if the interaction was successful, false otherwise
      */
     public abstract boolean interactType(Player p);
-
-    /**
-     * Returns the identifier of this content.
-     *
-     * @return idContent
-     */
-    public int getIdContent() {
-        return idContent;
-    }
 
     /**
      * Indicates if the content has already been solved.
@@ -54,4 +43,16 @@ public abstract class Content {
     protected void setSolved(boolean isSolved) {
         this.solved = isSolved;
     }
+
+
+    /**
+     * Returns a string representation of this Content instance.
+     *
+     * @return A formatted string describing the content's current state.
+     */
+    @Override
+    public String toString() {
+        return "Content [solved=" + solved + ", toString()=" + super.toString() + "]";
+    }
+
 }
