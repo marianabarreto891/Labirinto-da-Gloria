@@ -52,7 +52,7 @@ public abstract class Content {
      */
     @Override
     public String toString() {
-        return "Content [solved=" + solved + ", toString()=" + super.toString() + "]";
+        return "Content [solved=" + solved + "]";
     }
 
 }

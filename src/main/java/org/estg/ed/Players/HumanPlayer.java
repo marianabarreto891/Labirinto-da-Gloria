@@ -82,12 +82,9 @@ public class HumanPlayer extends Player {
         }
 
         Hallway[] hallwayOptions = new Hallway[size];
-        Hallway chosenHallway = null;
 
-        while (chosenHallway == null) {
-
-            Iterator<Hallway> iterator = availableHallways.iterator();
-            int i = 0;
+         Iterator<Hallway> iterator = availableHallways.iterator();
+         int i = 0;
 
             System.out.println("\n" + this.getName() + " is in"
                     + this.getCurrentDivision().getId() + ". Choose a path: ");
@@ -106,17 +103,15 @@ public class HumanPlayer extends Player {
                 int choiceIndex = Integer.parseInt(sc.nextLine());
 
                 if (choiceIndex >= 0 && choiceIndex < hallwayOptions.length) {
-                    return hallwayOptions[choiceIndex];
+                    return hallwayOptions[choiceIndex - 1];
                 } else {
                     System.out.println("Invalid Number");
                 }
 
             } catch (Exception e) {
                 System.out.println("Invalid entry. Please try again!");
-            }
-        }
-
-        return null;
+            } 
+        return null; 
     }
 
 

@@ -121,9 +121,11 @@ public class GameManager {
      * @param enigma The content object representing the enigma.
      */
     private void attemptEnigma(Player player, Content enigma) {
+        Division division = player.getCurrentDivision();
         boolean success = enigma.interactType(player);
         if (success) {
             System.out.println("You solved the enigma! You can continue.");
+            //division.setContent(null);
         } else {
             System.out.println("You failed to solve the enigma. Try again next turn.");
         }
@@ -136,9 +138,11 @@ public class GameManager {
      * @param lever  The content object representing the lever.
      */
     private void attemptLever(Player player, Content lever) {
+        Division division = player.getCurrentDivision();
         boolean success = lever.interactType(player);
         if (success) {
             System.out.println("You activated the lever! You can continue.");
+            //division.setContent(null); 
             movePlayer(player);
         } else {
             System.out.println("You failed to activate the lever. Try again next turn.");
