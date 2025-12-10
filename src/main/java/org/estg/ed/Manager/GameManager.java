@@ -118,7 +118,7 @@ public void startGame() {
                     
                     // 3. Verificação de Movimentos Extra Ganhos
                     if (currentPlayer.getExtraMoves() > 0) {
-                        System.out.println("🎉 Jogada Extra! " + currentPlayer.getName() + " ganhou a oportunidade de jogar novamente.");
+                        System.out.println(" Jogada Extra! " + currentPlayer.getName() + " ganhou a oportunidade de jogar novamente.");
                         
                         // Consome um movimento extra e prepara para repetir
                         currentPlayer.useExtraMove(); 
@@ -304,7 +304,7 @@ public void startGame() {
         for (Player player : players) {
             if (player.getCurrentDivision().equals(centralRoom)) {
                 System.out.println("\n" + "=".repeat(60));
-                System.out.println("🎉 VITÓRIA! 🎉");
+                System.out.println(" VITÓRIA! ");
                 System.out.println(player.getName() + " chegou à Sala Central e conquistou o tesouro!");
                 System.out.println("Enigmas resolvidos: " + player.generateJSONReport());
                 System.out.println("=".repeat(60));

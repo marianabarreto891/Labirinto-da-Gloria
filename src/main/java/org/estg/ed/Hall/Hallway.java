@@ -85,6 +85,10 @@ public class Hallway {
         return event;
     }
 
+    public int getEventId() {
+        return eventId;
+    }
+
     /**
      * Activates the random event (if it exists) when a Player crosses the Hallway.
      * This method invokes the Event's logic to apply effects, such as gaining extra

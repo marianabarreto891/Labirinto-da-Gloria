@@ -20,7 +20,7 @@ public class MazeNetwork extends Network<Division> {
 
     private Division startDivision;
     private Division centralRoom;
-    private ArrayUnorderedList<Hallway> hallways;
+    public ArrayUnorderedList<Hallway> hallways;
 
     /**
      * Constructs a new MazeNetwork with default capacity.
