@@ -4,7 +4,6 @@ import org.estg.ed.Divisions.Division;
 import org.estg.ed.Hall.Hallway;
 import org.estg.ed.Maze.Maze;
 
-import Graphs.Network;
 import Lists.ArrayUnorderedList;
 
 /**
@@ -26,12 +25,9 @@ public class MazeGraphConverter {
      * @param maze The Maze object containing the lists of rooms and paths.
      * @return A fully constructed Network of Divisions representing the maze topology.
      */
-    public static Network<Division> convertMazeToNetwork(Maze maze) {
-
-        Network<Division> network = new Network<>();
-
+     public static ExtendedNetwork<Division> convertMazeToNetwork(Maze maze) {
+        ExtendedNetwork<Division> network = new ExtendedNetwork<>();
         ArrayUnorderedList<Division> divisions = maze.getD();
-
         ArrayUnorderedList<Hallway> halls = maze.getH();
 
         for (Division division : divisions) {

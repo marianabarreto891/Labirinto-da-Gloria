@@ -69,7 +69,7 @@ public class BotPlayer extends Player {
      */
     @Override
     public Hallway chooseNextMove(DoublyLinkedUnorderedList<Hallway> availableHallways) {
-        int size = availableHallways.size(); // Gets the number of available moves.
+        int size = availableHallways.size();
 
         if (size == 0) {
             return null;
