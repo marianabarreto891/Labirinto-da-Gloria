@@ -14,7 +14,6 @@ import org.estg.ed.Players.Player;
 import Lists.ArrayUnorderedList;
 import Lists.DoublyLinkedUnorderedList;
 
-
 /**
  * Manages the core game logic for the Labyrinth of Glory.
  *
@@ -23,11 +22,15 @@ import Lists.DoublyLinkedUnorderedList;
  * between the data structures and the game rules.
  */
 public class GameManager {
-    private MazeNetwork mazeNetwork;
-    private ArrayUnorderedList<Player> players;
-    private Division centralRoom;
+    private final MazeNetwork mazeNetwork;
+    private final ArrayUnorderedList<Player> players;
+    private final Division centralRoom;
     private int currentPlayerIndex;
-
+    private final String mazeName;
+    
+    // Proteção contra loops infinitos
+    private static final int MAX_TURNS = 1000;
+    private int turnCount = 0;
 
     /**
      * Constructs a new GameManager.
@@ -40,8 +43,8 @@ public class GameManager {
     public GameManager(Maze maze, ArrayUnorderedList<Player> players) {
         this.players = players;
         this.centralRoom = maze.getCentralRoom();
+        this.mazeName = maze.getName();
         
-       
         HallwayManager.setGameManager(this);
         
         // Criar e popular o MazeNetwork
@@ -57,7 +60,7 @@ public class GameManager {
             mazeNetwork.addHallway(hall);
         }
         
-        // Definir o ponto de entrada (primeira divisão de tipo ENTRY encontrada)
+        // Definir o ponto de entrada
         Division entryDivision = findEntryDivision(maze.getD());
         mazeNetwork.setStartDivision(entryDivision);
         mazeNetwork.setCentralRoom(this.centralRoom);
@@ -67,9 +70,6 @@ public class GameManager {
     
     /**
      * Método auxiliar para encontrar a divisão de entrada.
-     * 
-     * @param divisions lista de divisões
-     * @return a primeira divisão de tipo ENTRY, ou null se não encontrada
      */
     private Division findEntryDivision(ArrayUnorderedList<Division> divisions) {
         for (Division division : divisions) {
@@ -82,155 +82,161 @@ public class GameManager {
 
 
     /**
-     * Starts the main game loop.
-     *
-     * Cycles through players, allowing them to take turns until the win condition
-     * is met. Once the game ends, the winner is announced.
-     */
-   // Dentro de GameManager.java
+ * Retrieves a specific player from the list based on index.
+ */
+private Player findPlayerByIndex(ArrayUnorderedList<Player> players, int index) {
+    Iterator<Player> iterator = players.iterator();
+    int currentIndex = 0;
+    while (iterator.hasNext()) {
+        Player player = iterator.next();
+        if (currentIndex == index) {
+            return player;
+        }
+        currentIndex++;
+    }
+    return null;
+}
 
-public void startGame() {
-    while (!isGameOver()) {
+
+
+    public void startGame() {
+    while (!isGameOver() && turnCount < MAX_TURNS) {
+        turnCount++;
+        
+        // Aviso a cada 100 turnos (para debug)
+        if (turnCount % 100 == 0) {
+            System.out.println("\nWarning: Turn " + turnCount + " - Game still in progress...");
+        }
+        
+        // USAR O MÉTODO QUE JÁ EXISTE NO GameManager
         Player currentPlayer = findPlayerByIndex(players, currentPlayerIndex);
 
         if (currentPlayer != null) {
-            
-            // 1. Verificar se o jogador pode jogar (lida com SkipTurnEvent)
-            if (!currentPlayer.canPlay()) { 
-                // Se estiver bloqueado, apenas regista e avança para o próximo jogador
-                System.out.println("Turno de " + currentPlayer.getName() + " pulado devido a bloqueio.");
-                
+            // Verificar se o jogador pode jogar
+            if (!currentPlayer.canPlay()) {
+                System.out.println("Turn of " + currentPlayer.getName() + " skipped due to block.");
             } else {
-                
-                // 2. Loop para Turno Normal + Turnos Extra
+                // Loop para turno normal + turnos extra
                 boolean playAgain;
 
                 do {
-                    playAgain = false; // Assume que este é o último movimento
+                    playAgain = false;
 
-                    // O jogador joga o seu turno (move-se, interage com Enigma/Lever)
+                    // O jogador joga o seu turno
                     takeTurn(currentPlayer);
                     
-                    // Se o jogo terminou após o movimento/interação, saímos do loop
+                    // Se o jogo terminou, sair do loop
                     if (isGameOver()) {
                         break;
                     }
                     
-                    // 3. Verificação de Movimentos Extra Ganhos
+                    // Verificação de movimentos extra
                     if (currentPlayer.getExtraMoves() > 0) {
-                        System.out.println(" Jogada Extra! " + currentPlayer.getName() + " ganhou a oportunidade de jogar novamente.");
-                        
-                        // Consome um movimento extra e prepara para repetir
-                        currentPlayer.useExtraMove(); 
-                        playAgain = true; 
-                        
-                        System.out.println("Movimentos extra restantes: " + currentPlayer.getExtraMoves());
+                        System.out.println("Extra Move! " + currentPlayer.getName() + " gained the opportunity to play again.");
+                        currentPlayer.useExtraMove();
+                        playAgain = true;
+                        System.out.println("Extra moves remaining: " + currentPlayer.getExtraMoves());
                     }
-                    
-                    // O loop repete APENAS se playAgain for true (i.e., ganhou e consumiu um extra move)
 
                 } while (playAgain);
             }
         }
 
-        // Avança para o próximo jogador (após esgotar todos os movimentos extra)
+        // Avança para o próximo jogador
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
     }
-    announceWinner();
-}
-
-
-
-    /**
-     * Retrieves a specific player from the unordered list based on a numeric index.
-     *
-     * @param players The list of players.
-     * @param index The zero-based index of the player to retrieve.
-     * @return The Player object at the specified index, or null if not found.
-     */
-    private Player findPlayerByIndex(ArrayUnorderedList<Player> players, int index) {
-        Iterator<Player> iterator = players.iterator();
-        int currentIndex = 0;
-        while (iterator.hasNext()) {
-            Player player = iterator.next();
-
-            if (currentIndex == index) {
-                return player;
-            }
-
-            currentIndex++;
+    
+    // Determinar o vencedor
+    Player winner = null;
+    for (Player player : players) {
+        if (player.getCurrentDivision().equals(centralRoom)) {
+            winner = player;
+            break;
         }
-        return null;
     }
-
+    
+    // Verificar se atingiu o limite de turnos
+    if (turnCount >= MAX_TURNS) {
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("GAME OVER: Turn limit reached!");
+        System.out.println("Possible infinite loop or impossible map to complete.");
+        System.out.println("=".repeat(60));
+    } else {
+        announceWinner();
+    }
+    
+    //  GUARDAR O RELATÓRIO DO JOGO (NOVA FUNCIONALIDADE)
+    GameReportManager.saveGameReport(players, winner, mazeName, turnCount);
+}
 
     /**
      * Orchestrates a single turn for the specified player.
-     *
-     * Checks if the player is blocked. If not, it determines the type of the
-     * current division and initiates the appropriate interaction or movement logic.
-     *
-     * @param player The player whose turn it is.
+     * * CORREÇÃO: Agora permite movimento MESMO quando falharem enigmas/alavancas
      */
     private void takeTurn(Player player) {
         if (!player.canPlay()) {
             return;
         }
+        
         Division currentDivision = player.getCurrentDivision();
+        System.out.println("\n" + player.getName() + ", it's your turn! You are in division " + currentDivision.getId());
 
-        System.out.println("\n" + player.getName() + ", é sua vez! Você está na divisão " + currentDivision.getId());
+        boolean canMove = true; // Por padrão, pode mover
 
         if (currentDivision.getDt() == DivisionType.ENIGMA) {
-            attemptEnigma(player, (Content) currentDivision.getContent());
+            boolean solved = attemptEnigma(player, (Content) currentDivision.getContent());
+            
+            // If the room has content, the player must interact with it, but the movement 
+            // is decoupled from success (new logic).
+            canMove = true;
 
         } else if (currentDivision.getDt() == DivisionType.LEVER) {
-            attemptLever(player, (Content) currentDivision.getContent());
+            boolean activated = attemptLever(player, (Content) currentDivision.getContent());
+            
+            // Movement is decoupled from activation success.
+            canMove = true;
+        }
 
-        } else {
+        // Always attempts to move (unless the player cannot play)
+        if (canMove) {
             movePlayer(player);
         }
     }
 
     /**
-     * Handles the interaction logic when a player is in a room with an Enigma.
-     *
-     * @param player The player attempting the enigma.
-     * @param enigma The content object representing the enigma.
+     * Handles enigma interaction.
+     * Retorna true se resolveu, false se falhou.
      */
-    private void attemptEnigma(Player player, Content enigma) {
+    private boolean attemptEnigma(Player player, Content enigma) {
         boolean success = enigma.interactType(player);
+        
         if (success) {
-            System.out.println(" Você resolveu o enigma! Pode continuar.");
-            movePlayer(player);
+            System.out.println("You solved the enigma!");
         } else {
-            System.out.println(" Falhou em resolver o enigma. Tente novamente na próxima vez.");
+            System.out.println("Failed to solve the enigma. You can try again or move forward.");
         }
+        
+        return success;
     }
 
     /**
-     * Handles the interaction logic when a player is in a room with a Lever.
-     *
-     * @param player The player attempting to use the lever.
-     * @param lever The content object representing the lever.
+     * Handles lever interaction.
+     * Retorna true se ativou, false se falhou.
      */
-    private void attemptLever(Player player, Content lever) {
+    private boolean attemptLever(Player player, Content lever) {
         boolean success = lever.interactType(player);
+        
         if (success) {
-            System.out.println("Você ativou a alavanca! Pode continuar.");
-            movePlayer(player);
+            System.out.println("You activated the lever!");
         } else {
-            System.out.println("Falhou em ativar a alavanca. Tente novamente na próxima vez.");
+            System.out.println("Failed to activate the lever. You can try again or move forward.");
         }
+        
+        return success;
     }
-
 
     /**
      * Initiates the movement phase of a turn.
-     *
-     * Verifies if the player is allowed to move and then calls the logic
-     * to determine the next destination.
-     *
-     * @param player The player attempting to move.
      */
     private void movePlayer(Player player) {
         if (!player.canPlay()) {
@@ -239,24 +245,15 @@ public void startGame() {
         getNextDivision(player);
     }
 
-
     /**
      * Calculates the valid hallways available from the current division.
-     * 
-     * Utiliza o método do MazeNetwork que filtra corretamente apenas os vizinhos diretos.
-     *
-     * @param currentDivision The division the player is currently in.
-     * @return A doubly linked list of available Hallways.
      */
     private DoublyLinkedUnorderedList<Hallway> getAvailableHallways(Division currentDivision) {
         return mazeNetwork.getAvailableHallways(currentDivision);
     }
 
-
     /**
      * Coordinates the process of moving a player to a new division.
-     *
-     * @param player The player moving.
      */
     private void getNextDivision(Player player) {
         Division currentDivision = player.getCurrentDivision();
@@ -264,7 +261,7 @@ public void startGame() {
         DoublyLinkedUnorderedList<Hallway> availableHallways = getAvailableHallways(currentDivision);
 
         if (availableHallways.isEmpty()) {
-            System.out.println(" Nenhum caminho disponível. Turno pulado.");
+            System.out.println("No path available. Turn skipped.");
             return;
         }
 
@@ -274,16 +271,12 @@ public void startGame() {
             player.moveTo(chosenHallway.getDestination(), chosenHallway);
             chosenHallway.activateEvent(player);
         } else {
-            System.out.println(" Movimento cancelado.");
+            System.out.println("Movement canceled.");
         }
     }
 
     /**
      * Checks if the game has ended.
-     *
-     * The game is over if any player currently occupies the central room.
-     *
-     * @return true if the win condition is met, false otherwise
      */
     private boolean isGameOver() {
         for (Player player : players) {
@@ -294,52 +287,49 @@ public void startGame() {
         return false;
     }
 
-
-    /**
-     * Announces the winner of the game.
-     *
-     * Scans the players to find who is in the central room and prints a victory message.
-     */
-    private void announceWinner() {
-        for (Player player : players) {
-            if (player.getCurrentDivision().equals(centralRoom)) {
-                System.out.println("\n" + "=".repeat(60));
-                System.out.println(" VITÓRIA! ");
-                System.out.println(player.getName() + " chegou à Sala Central e conquistou o tesouro!");
-                System.out.println("Enigmas resolvidos: " + player.generateJSONReport());
-                System.out.println("=".repeat(60));
-                return;
+   private void announceWinner() {
+    for (Player player : players) {
+        if (player.getCurrentDivision().equals(centralRoom)) {
+            System.out.println("\n" + "=".repeat(60));
+            System.out.println("VICTORY!");
+            System.out.println(player.getName() + " reached the Central Room and conquered the treasure!");
+            System.out.println("=".repeat(60));
+            
+            // Mostrar estatísticas na consola
+            System.out.println("\n--- GAME STATISTICS ---");
+            System.out.println("Total turns: " + turnCount);
+            System.out.println("\n--- PLAYER REPORTS ---");
+            
+            for (Player p : players) {
+                System.out.println("\nPlayer: " + p.getName());
+                System.out.println("Current Position: " + p.getCurrentDivision().getId());
+                System.out.println("Path History Size: " + p.getPathHistorySize());
             }
+            
+            return;
         }
+    }
     }
 
     /**
-     * Getter para o MazeNetwork (útil para debugging e visualização)
-     * 
-     * @return o MazeNetwork do jogo
+     * Getter para o MazeNetwork
      */
     public MazeNetwork getMazeNetwork() {
         return mazeNetwork;
     }
 
     /**
-     * Getter para a lista de jogadores (necessário para SwapPositionEvent e SwapAllPositionsEvent)
-     * 
-     * @return a lista de todos os jogadores
+     * Getter para a lista de jogadores
      */
     public ArrayUnorderedList<Player> getAllPlayers() {
         return players;
     }
 
     /**
- * Desbloqueia uma Hallway no MazeNetwork (altera o peso para torná-la acessível).
- * Este método é chamado pelo Lever quando ativado com sucesso.
- * @param hallway A Hallway a ser desbloqueada.
- */
-public void unlockHallway(Hallway hallway) {
-    // Para simplificar, assumimos que o peso é o custo real
-    double currentWeight = hallway.getWeight();
-
-
-}
+     * Desbloqueia uma Hallway no MazeNetwork
+     */
+    public void unlockHallway(Hallway hallway) {
+        double currentWeight = hallway.getWeight();
+        // Implementar lógica de desbloqueio se necessário
+    }
 }

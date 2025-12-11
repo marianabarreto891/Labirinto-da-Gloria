@@ -29,7 +29,7 @@ public class EnigmaLoader {
      */
     public static ArrayUnorderedList<Enigma> loadEnigmasFromJSON(String filename) {
 
-        ArrayUnorderedList<Enigma> enigmas = new ArrayUnorderedList<Enigma>();
+        ArrayUnorderedList<Enigma> enigmas = new ArrayUnorderedList<>();
         try (FileReader reader = new FileReader(filename)) {
             JSONTokener tokener = new JSONTokener(reader);
             JSONObject root = new JSONObject(tokener);

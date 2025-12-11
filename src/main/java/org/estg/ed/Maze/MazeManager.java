@@ -95,4 +95,11 @@ public class MazeManager {
     public EnigmaManager getEnigmaManager() {
         return enigmaManager;
     }
+
+
+
+
+
+
+    
 }

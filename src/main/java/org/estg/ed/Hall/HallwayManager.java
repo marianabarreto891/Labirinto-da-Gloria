@@ -65,15 +65,6 @@ public class HallwayManager {
     /**
      * Converts an eventId into a concrete Event instance.
      * 
-     * MAPEAMENTO DE EVENTOS:
-     * 1 → ExtraMoveEvent(1) - Ganhar 1 jogada extra
-     * 2 → ExtraMoveEvent(2) - Ganhar 2 jogadas extra
-     * 3 → MoveBackEvent(1) - Recuar 1 divisão
-     * 4 → MoveBackEvent(2) - Recuar 2 divisões
-     * 5 → SkipTurnEvent(1) - Perder 1 turno
-     * 6 → SkipTurnEvent(2) - Perder 2 turnos
-     * 7 → SwapPositionEvent - Trocar posição com outro jogador
-     * 8 → SwapAllPositionsEvent - Trocar posições de TODOS os jogadores
      * 
      * @param eventId o identificador numérico do evento
      * @return Event correspondente ou null se inválido
@@ -81,12 +72,14 @@ public class HallwayManager {
     private static Event createEvent(int eventId) {
 
         switch (eventId) {
-            case 1:
-                return new ExtraMoveEvent(1);
+            case 0: // ⬅️ NOVO CASE ADICIONADO para lidar com "Nenhum Evento"
+            return null; // O Hallway é criado sem evento associado (o que é o desejado)
 
-            case 2:
-                return new ExtraMoveEvent(2);
-
+        case 1:
+            return new ExtraMoveEvent(1);
+        
+        case 2:
+            return new ExtraMoveEvent(2);
             case 3:
                 return new MoveBackEvent(1);
 

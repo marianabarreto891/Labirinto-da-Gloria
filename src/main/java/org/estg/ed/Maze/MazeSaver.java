@@ -20,9 +20,9 @@ public class MazeSaver {
     /**
      * Converts a Maze object into a structured JSON file.
      *
-     * @param maze O objeto Maze a ser guardado.
-     * @param filename O nome do ficheiro (ex: 'novo_mapa.json').
-     * @return true se o mapa foi guardado com sucesso, false em caso de erro.
+     * @param maze The Maze object to be saved.
+     * @param filename The name of the file (ex: 'new_map.json').
+     * @return true if the map was saved successfully, false otherwise.
      */
     public static boolean saveMazeToJSON(Maze maze, String filename) {
         // 1. Criar o objeto JSON principal
@@ -42,10 +42,10 @@ public class MazeSaver {
         try (FileWriter file = new FileWriter(filename)) {
             // Usamos o toString(4) para formatar o JSON (indentação de 4 espaços), tornando-o legível.
             file.write(mazeJson.toString(4)); 
-            System.out.println("Mapa guardado com sucesso em: " + filename);
+            System.out.println("Map successfully saved to: " + filename);
             return true;
         } catch (IOException e) {
-            System.err.println("ERRO ao gravar o ficheiro JSON: " + e.getMessage());
+            System.err.println("ERROR saving JSON file: " + e.getMessage());
             return false;
         }
     }

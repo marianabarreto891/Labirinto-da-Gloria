@@ -25,11 +25,11 @@ public class MazeEditor {
         // Inicializa o Maze com listas vazias
         ArrayUnorderedList<Hallway> h = new ArrayUnorderedList<>();
         ArrayUnorderedList<Division> d = new ArrayUnorderedList<>();
-        this.currentMaze = new Maze(1, "Novo Mapa Nao Salvo", h, d);
+        this.currentMaze = new Maze(1, "New Unsaved Map", h, d);
         
         // Usa o MazeGraphConverter CORRIGIDO
         this.currentNetwork = MazeGraphConverter.convertMazeToNetwork(currentMaze);
-        System.out.println("Novo mapa vazio criado.");
+        System.out.println("New empty map created.");
     }
     
     /**
@@ -42,9 +42,9 @@ public class MazeEditor {
         if (this.currentMaze != null) {
             // Usa o MazeGraphConverter CORRIGIDO
             this.currentNetwork = MazeGraphConverter.convertMazeToNetwork(currentMaze);
-            System.out.println("Mapa '" + currentMaze.getName() + "' carregado para edição.");
+            System.out.println("Map '" + currentMaze.getName() + "' loaded for editing.");
         } else {
-            System.err.println("ERRO: Falha ao carregar o mapa do ficheiro: " + filename);
+            System.err.println("ERROR: Failed to load map from file: " + filename);
         }
     }
     
@@ -57,7 +57,7 @@ public class MazeEditor {
      */
     public void addDivision(int id, DivisionType type) {
         if (findDivision(id) != null) {
-            System.err.println("ERRO: Divisão com ID " + id + " já existe.");
+            System.err.println("ERROR: Division with ID " + id + " already exists.");
             return;
         }
         
@@ -69,7 +69,7 @@ public class MazeEditor {
         // 2. Adiciona ao Grafo (MazeNetwork) para a lógica do jogo
         currentNetwork.addVertex(newDiv);    
         
-        System.out.println("✅ Divisão " + id + " (" + type + ") adicionada.");
+        System.out.println("Division " + id + " (" + type + ") added.");
     }
 
     /**
@@ -84,7 +84,7 @@ public class MazeEditor {
         Division div2 = findDivision(id2);
         
         if (div1 == null || div2 == null) {
-             System.err.println("ERRO: Uma ou ambas as divisões não encontradas.");
+             System.err.println("ERROR: One or both divisions not found.");
              return;
         }
         
@@ -100,7 +100,7 @@ public class MazeEditor {
         // Também é útil manter a lista interna de hallways do MazeNetwork atualizada
         currentNetwork.hallways.addToRear(newHall); 
 
-        System.out.println("✅ Corredor (" + id1 + " <-> " + id2 + ", Peso: " + weight + ") criado.");
+        System.out.println("Hallway (" + id1 + " <-> " + id2 + ", Weight: " + weight + ") created.");
     }
 
     /**
@@ -109,7 +109,7 @@ public class MazeEditor {
     public void setMetadata(int id, String name) {
         currentMaze.setId(id);
         currentMaze.setName(name);
-        System.out.println("Metadados atualizados para ID: " + id + ", Nome: " + name);
+        System.out.println("Metadata updated to ID: " + id + ", Name: " + name);
     }
     
     /**
@@ -118,7 +118,7 @@ public class MazeEditor {
      */
     public void saveMaze(String filename) {
         MazeSaver.saveMazeToJSON(currentMaze, filename);
-        System.out.println("💾 Mapa '" + currentMaze.getName() + "' guardado com sucesso em " + filename + ".");
+        System.out.println(" Map '" + currentMaze.getName() + "' saved successfully to " + filename + ".");
     }
     
     // --- HELPER ---
@@ -147,4 +147,3 @@ public class MazeEditor {
         return currentMaze;
     }
 }
-
