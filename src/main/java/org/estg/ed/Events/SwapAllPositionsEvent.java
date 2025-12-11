@@ -6,15 +6,12 @@ import org.estg.ed.Divisions.Division;
 import org.estg.ed.Manager.GameManager;
 import org.estg.ed.Players.Player;
 
+import Exceptions.EmptyCollectionException; 
 import Lists.ArrayUnorderedList;
 
 /**
  * Evento que troca as posições de TODOS os jogadores de forma aleatória.
- * Este evento embaralha as posições de todos os jogadores no labirinto,
- * criando caos estratégico e imprevisibilidade no jogo.
- * 
- * REGRA IMPORTANTE: Jogadores que já estão na sala central (tesouro) 
- * NÃO são afetados pela troca para preservar a condição de vitória.
+ * ...
  */
 public class SwapAllPositionsEvent extends Event {
 
@@ -22,9 +19,7 @@ public class SwapAllPositionsEvent extends Event {
 
     /**
      * Construtor que recebe referência ao GameManager.
-     * O GameManager é necessário para aceder à lista completa de jogadores.
-     *
-     * @param gameManager instância do gestor de jogo
+     * ...
      */
     public SwapAllPositionsEvent(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -32,15 +27,7 @@ public class SwapAllPositionsEvent extends Event {
 
     /**
      * Aplica o efeito de trocar aleatoriamente as posições de todos os jogadores.
-     * 
-     * Algoritmo:
-     * 1. Filtra jogadores que NÃO estão na sala central
-     * 2. Coleta as posições desses jogadores elegíveis
-     * 3. Embaralha as posições aleatoriamente (algoritmo Fisher-Yates)
-     * 4. Redistribui as posições embaralhadas
-     * 5. Regista o evento no histórico de cada jogador afetado
-     *
-     * @param player O Player que ativou o evento ao atravessar o corredor.
+     * ...
      */
     @Override
     public void applyEffect(Player player) {
@@ -86,12 +73,12 @@ public class SwapAllPositionsEvent extends Event {
             currentPositions.addToRear(p.getCurrentDivision());
         }
 
-        // 3. Embaralhar as posições usando algoritmo Fisher-Yates
+        // 3. Embaralhar as posições usando algoritmo Fisher-Yates (AQUI ESTÁ A CORREÇÃO)
         shufflePositions(currentPositions);
 
         // 4. Atribuir as novas posições a cada jogador elegível
         Iterator<Player> swapIterator = eligiblePlayers.iterator();
-        Iterator<Division> positionIterator = currentPositions.iterator();
+        Iterator<Division> positionIterator = currentPositions.iterator(); 
 
         while (swapIterator.hasNext() && positionIterator.hasNext()) {
             Player p = swapIterator.next();
@@ -112,8 +99,8 @@ public class SwapAllPositionsEvent extends Event {
 
         // Mensagem principal do evento
         System.out.println("\n GLOBAL POSITION SWAP! All eligible players' positions have been randomized!");
-        System.out.println("   Triggered by " + player.getName());
-        System.out.println("   Players affected: " + eligiblePlayers.size() + " / " + allPlayers.size());
+        System.out.println("   Triggered by " + player.getName());
+        System.out.println("   Players affected: " + eligiblePlayers.size() + " / " + allPlayers.size());
         
         // Informar sobre jogadores protegidos (se houver)
         int protectedPlayers = allPlayers.size() - eligiblePlayers.size();
@@ -123,27 +110,29 @@ public class SwapAllPositionsEvent extends Event {
         System.out.println();
     }
 
+
     /**
      * Embaralha uma lista de divisões usando o algoritmo Fisher-Yates.
-     * Este método modifica a lista original in-place.
-     * 
-     * Complexidade: O(n) onde n é o tamanho da lista
+     * * CORRIGIDO: Garante que a lista 'positions' é modificada in-place com os elementos embaralhados.
      *
      * @param positions lista de divisões a embaralhar
      */
     private void shufflePositions(ArrayUnorderedList<Division> positions) {
         int size = positions.size();
         
-        // Converter para array temporário para facilitar o shuffle
+        if (size <= 1) return; // Nada para embaralhar
+
+        // 1. Converter para array temporário para facilitar o shuffle
         Division[] tempArray = new Division[size];
         Iterator<Division> iterator = positions.iterator();
         int index = 0;
         
+        // Preencher o array temporário
         while (iterator.hasNext()) {
             tempArray[index++] = iterator.next();
         }
         
-        // Fisher-Yates shuffle algorithm
+        // 2. Fisher-Yates shuffle algorithm (embaralha o array)
         for (int i = size - 1; i > 0; i--) {
             int randomIndex = (int) (Math.random() * (i + 1));
             
@@ -153,8 +142,18 @@ public class SwapAllPositionsEvent extends Event {
             tempArray[randomIndex] = temp;
         }
         
-        // Reconstruir a lista embaralhada
-        positions = new ArrayUnorderedList<>();
+        // 3. Limpar todos os elementos da lista original de forma segura
+        try {
+            // Este é o método mais seguro para limpar ArrayUnorderedList/DoublyLinkedUnorderedList
+            while (positions.size() > 0) {
+                // Remove o primeiro elemento (lança EmptyCollectionException no final)
+                positions.removeFirst(); 
+            }
+        } catch (EmptyCollectionException e) {
+            // Ignorar, a lista está vazia
+        }
+        
+        // 4. Re-adicionar os elementos EMBARALHADOS de volta à lista original 'positions'
         for (int i = 0; i < size; i++) {
             positions.addToRear(tempArray[i]);
         }

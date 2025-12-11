@@ -1,9 +1,9 @@
 package org.estg.ed;
 
-import org.estg.ed.Manager.GameInitializer;
-
 import java.io.File;
 import java.util.Scanner;
+
+import org.estg.ed.Manager.GameInitializer;
 
 /**
  * Main Menu for the Labyrinth of Glory.
@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class MainMenu {
 
     private static final String FOLDER_NAME = "Files/";
-    private Scanner scanner;
+    private final Scanner scanner;
 
     public static void main(String[] args) {
         MainMenu menu = new MainMenu();

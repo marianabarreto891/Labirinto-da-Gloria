@@ -62,56 +62,45 @@ public class HallwayManager {
 
     }
 
-    /**
-     * Converts an eventId into a concrete Event instance.
-     * 
-     * 
-     * @param eventId o identificador numérico do evento
-     * @return Event correspondente ou null se inválido
-     */
-    private static Event createEvent(int eventId) {
+   /**
+ * Converts an eventId into a concrete Event instance.
+ * * * @param eventId o identificador numérico do evento
+ * @return Event correspondente ou null se inválido
+ */
+private static Event createEvent(int eventId) {
 
-        switch (eventId) {
-            case 0: // ⬅️ NOVO CASE ADICIONADO para lidar com "Nenhum Evento"
-            return null; // O Hallway é criado sem evento associado (o que é o desejado)
+    switch (eventId) {
+        case 0:
+            return null;
 
         case 1:
             return new ExtraMoveEvent(1);
         
         case 2:
             return new ExtraMoveEvent(2);
-            case 3:
-                return new MoveBackEvent(1);
+        
+        case 3:
+            return new MoveBackEvent(1);
 
-            case 4:
-                return new MoveBackEvent(2);
+        case 4:
+            return new MoveBackEvent(2);
 
-            case 5:
-                return new SkipTurnEvent(1);
+        case 5:
+            return new SkipTurnEvent(1);
 
-            case 6:
-                return new SkipTurnEvent(2);
+        case 6:
+            return new SkipTurnEvent(2);
 
-            case 7:
-                if (gameManager != null) {
-                    return new SwapPositionEvent(gameManager);
-                } else {
-                    System.err.println("ERROR: GameManager not set! SwapPositionEvent requires GameManager.");
-                    return null;
-                }
+       case 7:
+            // Passa o gameManager (que é null no modo de edição)
+            return new SwapPositionEvent(gameManager); 
 
-            case 8:
-                if (gameManager != null) {
-                    return new SwapAllPositionsEvent(gameManager);
-                } else {
-                    System.err.println("ERROR: GameManager not set! SwapAllPositionsEvent requires GameManager.");
-                    return null;
-                }
+        case 8:
+            return new SwapAllPositionsEvent(gameManager); 
 
-            default:
-                System.err.println("WARNING: Invalid eventId " + eventId + ". No event created.");
-                return null;
-        }
+        default:
+            System.err.println("WARNING: Invalid eventId " + eventId + ". No event created.");
+            return null;
     }
-
+}
 }

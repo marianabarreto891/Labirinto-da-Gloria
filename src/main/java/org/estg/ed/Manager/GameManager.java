@@ -97,8 +97,40 @@ private Player findPlayerByIndex(ArrayUnorderedList<Player> players, int index) 
     return null;
 }
 
+    // ⭐ NOVO MÉTODO: Imprime o estado atual do jogo (posição dos jogadores)
+    private void printGameStatus() {
+        System.out.println("\n--- Current Game Status (Turn: " + turnCount + ") ---");
+
+        Iterator<Player> playerIterator = players.iterator();
+        while (playerIterator.hasNext()) {
+            Player player = playerIterator.next();
+            Division currentDivision = player.getCurrentDivision();
+            
+            // Verificação de segurança: A divisão pode ser nula se houver um erro grave
+            if (currentDivision == null) {
+                System.out.println(player.getName() + " is currently unpositioned (ERROR).");
+                continue;
+            }
+            
+            System.out.print(player.getName() + " is in Division " + currentDivision.getId() +
+                    " (Type: " + currentDivision.getDt() + ")");
+
+            // Verifica o conteúdo e imprime de forma simplificada
+            Content content = currentDivision.getContent();
+            if (content != null) {
+                System.out.println(" | Content: " + content.getClass().getSimpleName());
+            } else {
+                System.out.println(" | Content: None");
+            }
+        }
+
+        System.out.println("--- End of Game Status ---\n");
+    }
 
 
+    /**
+     * Inicia o loop principal do jogo, gerindo os turnos dos jogadores.
+     */
     public void startGame() {
     while (!isGameOver() && turnCount < MAX_TURNS) {
         turnCount++;
@@ -108,7 +140,9 @@ private Player findPlayerByIndex(ArrayUnorderedList<Player> players, int index) 
             System.out.println("\nWarning: Turn " + turnCount + " - Game still in progress...");
         }
         
-        // USAR O MÉTODO QUE JÁ EXISTE NO GameManager
+        // ⭐ CHAMAR O NOVO MÉTODO AQUI (antes do turno do jogador)
+        printGameStatus();
+        
         Player currentPlayer = findPlayerByIndex(players, currentPlayerIndex);
 
         if (currentPlayer != null) {
@@ -165,43 +199,33 @@ private Player findPlayerByIndex(ArrayUnorderedList<Player> players, int index) 
         announceWinner();
     }
     
-    //  GUARDAR O RELATÓRIO DO JOGO (NOVA FUNCIONALIDADE)
+    //  GUARDAR O RELATÓRIO DO JOGO (NOVA FUNCIONALIDADE)
     GameReportManager.saveGameReport(players, winner, mazeName, turnCount);
 }
 
-    /**
-     * Orchestrates a single turn for the specified player.
-     * * CORREÇÃO: Agora permite movimento MESMO quando falharem enigmas/alavancas
-     */
-    private void takeTurn(Player player) {
-        if (!player.canPlay()) {
-            return;
-        }
-        
-        Division currentDivision = player.getCurrentDivision();
-        System.out.println("\n" + player.getName() + ", it's your turn! You are in division " + currentDivision.getId());
+// GameManager.takeTurn(Player player) - Regra: SEM SUCESSO = SEM MOVIMENTO
+private void takeTurn(Player player) {
+    // ... (parte inicial inalterada)
+    Division currentDivision = player.getCurrentDivision();
+    System.out.println("\n" + player.getName() + ", it's your turn! You are in division " + currentDivision.getId());
 
-        boolean canMove = true; // Por padrão, pode mover
+    boolean interactionSuccess = true; // Por defeito, não há obstáculo
 
-        if (currentDivision.getDt() == DivisionType.ENIGMA) {
-            boolean solved = attemptEnigma(player, (Content) currentDivision.getContent());
-            
-            // If the room has content, the player must interact with it, but the movement 
-            // is decoupled from success (new logic).
-            canMove = true;
-
-        } else if (currentDivision.getDt() == DivisionType.LEVER) {
-            boolean activated = attemptLever(player, (Content) currentDivision.getContent());
-            
-            // Movement is decoupled from activation success.
-            canMove = true;
-        }
-
-        // Always attempts to move (unless the player cannot play)
-        if (canMove) {
-            movePlayer(player);
-        }
+    if (currentDivision.getDt() == DivisionType.ENIGMA) {
+        interactionSuccess = attemptEnigma(player, (Content) currentDivision.getContent());
+    } else if (currentDivision.getDt() == DivisionType.LEVER) {
+        interactionSuccess = attemptLever(player, (Content) currentDivision.getContent());
     }
+
+    // ⭐ CORREÇÃO AQUI: Só permite o movimento se não houver obstáculo OU se a interação foi bem sucedida
+    if (interactionSuccess) {
+        movePlayer(player);
+    } else {
+        // Se falhou (interactionSuccess == false), o jogador não se move.
+        // O próximo turno do jogador começa novamente nesta divisão, permitindo tentar de novo.
+        System.out.println(player.getName() + " remains in Division " + currentDivision.getId() + " to try again next turn.");
+    }
+}
 
     /**
      * Handles enigma interaction.

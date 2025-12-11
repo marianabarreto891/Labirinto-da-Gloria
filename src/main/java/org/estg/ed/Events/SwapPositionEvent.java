@@ -1,10 +1,11 @@
 package org.estg.ed.Events;
 
-import org.estg.ed.Divisions.Division;
-import org.estg.ed.Players.Player;
-import org.estg.ed.Manager.GameManager;
-
 import java.util.Iterator;
+
+import org.estg.ed.Divisions.Division;
+import org.estg.ed.Manager.GameManager;
+import org.estg.ed.Players.Player;
+
 import Lists.ArrayUnorderedList;
 
 
@@ -38,28 +39,31 @@ public class SwapPositionEvent extends Event {
      */
     @Override
     public void applyEffect(Player player) {
-        // Find a target player to swap with
+        // Encontra o jogador alvo para a troca
         Player targetPlayer = findTargetPlayer(player);
 
         if (targetPlayer != null) {
             
-            // 1. Store the current positions (the "old" positions)
+            // 1. Guarda as posições atuais (as "antigas")
             Division playerCurrentPos = player.getCurrentDivision(); 
             Division targetCurrentPos = targetPlayer.getCurrentDivision();
 
-            // 2. Perform the swap using the safe method (setCurrentDivision), 
-            // which preserves the previousRecoilPosition for the moveBack logic.
+            // 2. Executa a troca (set current position)
             player.setCurrentDivision(targetCurrentPos); 
             targetPlayer.setCurrentDivision(playerCurrentPos);
             
-            // 3. Register the event in both players' histories
+            // 3. Regista o evento no histórico de ambos os jogadores
             player.registerEventPositionChange(this, playerCurrentPos); 
             targetPlayer.registerEventPositionChange(this, targetCurrentPos); 
             
             System.out.println(" POSITION SWAP! " + player.getName() + " swapped position with " 
                     + targetPlayer.getName() + "!");
-            System.out.println("   " + player.getName() + " is now at division " + playerCurrentPos.getId());
-            System.out.println("   " + targetPlayer.getName() + " is now at division " + targetCurrentPos.getId());
+            
+            // ⭐ CORREÇÃO AQUI: Usar a posição ALVO antiga para o jogador ATIVADOR
+            System.out.println("   " + player.getName() + " is now at division " + targetCurrentPos.getId()); 
+            
+            // ⭐ CORREÇÃO AQUI: Usar a posição ATIVADORA antiga para o jogador ALVO
+            System.out.println("   " + targetPlayer.getName() + " is now at division " + playerCurrentPos.getId());
         } else {
             System.out.println("Swap failed: No other player available to swap positions.");
         }
@@ -69,14 +73,14 @@ public class SwapPositionEvent extends Event {
     /**
      * Retrieves a target player to swap positions with. 
      * Selects a random player from the list of all players (excluding the current player).
-     * 
-     * Strategy: Random selection for unpredictability
+     * * Strategy: Random selection for unpredictability
      *
      * @param currentPlayer The player who activated the event.
      * @return The target player for the swap, or {@code null} if none are suitable or available.
      */
     private Player findTargetPlayer(Player currentPlayer) {
         if (gameManager == null) {
+            // Este erro é esperado no modo de edição de mapa, mas deve ser prevenido em tempo de jogo
             System.err.println("Error: GameManager not set in SwapPositionEvent");
             return null;
         }
@@ -88,7 +92,7 @@ public class SwapPositionEvent extends Event {
             return null;
         }
 
-        // Create a list of valid targets (all players except current)
+        // Cria uma lista de alvos válidos (todos os jogadores exceto o atual)
         ArrayUnorderedList<Player> validTargets = new ArrayUnorderedList<>();
         for (Player p : allPlayers) {
             if (!p.equals(currentPlayer)) {
@@ -100,10 +104,10 @@ public class SwapPositionEvent extends Event {
             return null;
         }
 
-        // Select a random target
+        // Seleciona um alvo aleatório
         int randomIndex = (int) (Math.random() * validTargets.size());
         
-        // Iterate to the random index
+        // Itera para encontrar o alvo no índice aleatório
         Player targetPlayer = null;
         Iterator<Player> targetIterator = validTargets.iterator();
         int currentIndex = 0;
@@ -116,7 +120,9 @@ public class SwapPositionEvent extends Event {
             currentIndex++;
         }
 
-        return targetPlayer; // Return the last one if we didn't break
+        // Embora a lógica acima deva sempre retornar se o validTargets não estiver vazio,
+        // mantemos este retorno por segurança.
+        return targetPlayer; 
     }
 
     
