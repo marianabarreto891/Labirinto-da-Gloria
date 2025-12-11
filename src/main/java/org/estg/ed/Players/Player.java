@@ -49,7 +49,7 @@ public abstract class Player implements Comparable<Player> {
         this.previousRecoilPosition = initialPosition;
         this.extraMoves = 0;
 
-         this.sc = sc;
+        this.sc = sc;
     }
 
     public abstract String answerEnigma(String question, String[] options);

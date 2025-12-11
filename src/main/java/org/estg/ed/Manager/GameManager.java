@@ -5,27 +5,26 @@ import java.util.Iterator;
 import org.estg.ed.Content.Content;
 import org.estg.ed.Divisions.Division;
 import org.estg.ed.Divisions.DivisionType;
+import org.estg.ed.Graph.ExtendedNetwork;
 import org.estg.ed.Hall.Hallway;
 import org.estg.ed.Players.Player;
 
-import Graphs.Network;
 import Lists.ArrayUnorderedList;
 import Lists.DoublyLinkedUnorderedList;
-
 
 /**
  * Manages the core game logic for the Labyrinth of Glory.
  *
- * This class acts as the central controller, handling the game loop, player turns,
+ * This class acts as the central controller, handling the game loop, player
+ * turns,
  * movement logic, and interactions with the maze network. It bridges the gap
  * between the data structures and the game rules.
  */
 public class GameManager {
-    private Network<Division> mazeNetwork;
+    private ExtendedNetwork<Division> mazeNetwork;
     private ArrayUnorderedList<Player> players;
     private Division centralRoom;
     private int currentPlayerIndex;
-
 
     /**
      * Constructs a new GameManager.
@@ -37,13 +36,13 @@ public class GameManager {
      * @param players     The list of players participating in the game.
      * @param centralRoom The target division representing the victory condition.
      */
-    public GameManager(Network<Division> mazeNetwork, ArrayUnorderedList<Player> players, Division centralRoom) {
+    public GameManager(ExtendedNetwork<Division> mazeNetwork, ArrayUnorderedList<Player> players,
+            Division centralRoom) {
         this.mazeNetwork = mazeNetwork;
         this.players = players;
         this.centralRoom = centralRoom;
         this.currentPlayerIndex = 0;
     }
-
 
     /**
      * Starts the main game loop.
@@ -54,9 +53,8 @@ public class GameManager {
     public void startGame() {
         while (!isGameOver()) {
             Player currentPlayer = findPlayerByIndex(players, currentPlayerIndex);
-
+            printGameStatus(); // Imprime o estado do jogo no início do turno
             takeTurn(currentPlayer);
-
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         }
         announceWinner();
@@ -75,16 +73,13 @@ public class GameManager {
         int currentIndex = 0;
         while (iterator.hasNext()) {
             Player player = iterator.next();
-
             if (currentIndex == index) {
                 return player;
             }
-
             currentIndex++;
         }
         return null;
     }
-
 
     /**
      * Orchestrates a single turn for the specified player.
@@ -99,16 +94,21 @@ public class GameManager {
         if (!player.canPlay()) {
             return;
         }
-        Division currentDivision = player.getCurrentDivision();
 
-        System.out.println(player.getName() + ", it's your turn. You are in division " + currentDivision.getId());
+        Division currentDivision = player.getCurrentDivision();
+        System.out
+                .println("\n" + player.getName() + ", it's your turn. You are in division " + currentDivision.getId());
 
         if (currentDivision.getDt() == DivisionType.ENIGMA) {
-            attemptEnigma(player, (Content) currentDivision.getContent());
-
+            boolean success = attemptEnigma(player, (Content) currentDivision.getContent());
+            if (success) {
+                movePlayer(player);
+            }
         } else if (currentDivision.getDt() == DivisionType.LEVER) {
-            attemptLever(player, (Content) currentDivision.getContent());
-
+            boolean success = attemptLever(player, (Content) currentDivision.getContent());
+            if (success) {
+                movePlayer(player);
+            }
         } else {
             movePlayer(player);
         }
@@ -120,14 +120,14 @@ public class GameManager {
      * @param player The player attempting the enigma.
      * @param enigma The content object representing the enigma.
      */
-    private void attemptEnigma(Player player, Content enigma) {
-        Division division = player.getCurrentDivision();
+    private boolean attemptEnigma(Player player, Content enigma) {
         boolean success = enigma.interactType(player);
         if (success) {
             System.out.println("You solved the enigma! You can continue.");
-            //division.setContent(null);
+            return true;
         } else {
             System.out.println("You failed to solve the enigma. Try again next turn.");
+            return false;
         }
     }
 
@@ -137,18 +137,16 @@ public class GameManager {
      * @param player The player attempting to use the lever.
      * @param lever  The content object representing the lever.
      */
-    private void attemptLever(Player player, Content lever) {
-        Division division = player.getCurrentDivision();
+    private boolean attemptLever(Player player, Content lever) {
         boolean success = lever.interactType(player);
         if (success) {
             System.out.println("You activated the lever! You can continue.");
-            //division.setContent(null); 
-            movePlayer(player);
+            return true;
         } else {
             System.out.println("You failed to activate the lever. Try again next turn.");
+            return false;
         }
     }
-
 
     /**
      * Initiates the movement phase of a turn.
@@ -165,7 +163,6 @@ public class GameManager {
         getNextDivision(player);
     }
 
-
     /**
      * Calculates the valid hallways available from the current division.
      *
@@ -178,28 +175,36 @@ public class GameManager {
     private DoublyLinkedUnorderedList<Hallway> getAvailableHallways(Division currentDivision) {
         DoublyLinkedUnorderedList<Hallway> availableHallways = new DoublyLinkedUnorderedList<>();
 
-        Iterator<Division> neighbors = mazeNetwork.iteratorBFS(currentDivision);
+        // Obter o índice da divisão atual
+        int currentIndex = mazeNetwork.getIndex(currentDivision);
 
-        while (neighbors.hasNext()) {
-            Division neighbor = neighbors.next();
+        // Verificar se o índice é válido
+        if (currentIndex == -1) {
+            return availableHallways;
+        }
 
-            double weight = mazeNetwork.shortestPathWeight(currentDivision, neighbor);
+        // Obter a matriz de adjacência
+        double[][] adjMatrix = mazeNetwork.getAdjMatrix();
 
-            if (weight < Double.POSITIVE_INFINITY) {
-                if (neighbor.getDt() != DivisionType.ENTRY) {
-                    Hallway hallway = new Hallway(
-                            currentDivision,
-                            neighbor,
-                            0,
-                            weight);
-                    availableHallways.addToRear(hallway);
+        // Iterar sobre todas as divisões para encontrar vizinhos
+        for (int i = 0; i < mazeNetwork.getNumVertices(); i++) {
+            double weight = adjMatrix[currentIndex][i];
+            if (weight < Double.POSITIVE_INFINITY && i != currentIndex) {
+                // Obter a divisão vizinha usando o índice
+                Object neighborObj = mazeNetwork.getVertex(i);
+                if (neighborObj instanceof Division) {
+                    Division neighbor = (Division) neighborObj;
+                    // Não permitir movimento direto para a divisão central
+                    if (neighbor.getDt() != DivisionType.CENTRAL || currentDivision.getDt() == DivisionType.CENTRAL) {
+                        Hallway hallway = new Hallway(currentDivision, neighbor, 0, weight);
+                        availableHallways.addToRear(hallway);
+                    }
                 }
             }
         }
 
         return availableHallways;
     }
-
 
     /**
      * Coordinates the process of moving a player to a new division.
@@ -209,11 +214,8 @@ public class GameManager {
      */
     private void getNextDivision(Player player) {
         Division currentDivision = player.getCurrentDivision();
-
         DoublyLinkedUnorderedList<Hallway> availableHallways = getAvailableHallways(currentDivision);
-
         Hallway chosenHallway = player.chooseNextMove(availableHallways);
-
         if (chosenHallway != null) {
             player.moveTo(chosenHallway.getDestination(), chosenHallway);
             chosenHallway.activateEvent(player);
@@ -238,11 +240,31 @@ public class GameManager {
         return false;
     }
 
+    private void printGameStatus() {
+        System.out.println("\n---Current Game Status ---");
+
+        Iterator<Player> playerIterator = players.iterator();
+        while (playerIterator.hasNext()) {
+            Player player = playerIterator.next();
+            Division currentDivision = player.getCurrentDivision();
+            System.out.println(player.getName() + " is in division " + currentDivision.getId() +
+                    " (Type: " + currentDivision.getDt() + ")");
+
+            if (currentDivision.getContent() != null) {
+                System.out.println("Content: " + currentDivision.getContent().toString());
+            } else {
+                System.out.println("Content: None");
+            }
+        }
+
+        System.out.println("--- End of Game Status ---\n");
+    }
 
     /**
      * Announces the winner of the game.
      *
-     * Scans the players to find who is in the central room and prints a victory message.
+     * Scans the players to find who is in the central room and prints a victory
+     * message.
      */
     private void announceWinner() {
         for (Player player : players) {
