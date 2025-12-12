@@ -1,5 +1,6 @@
 package org.estg.ed.Manager;
 
+import java.util.Iterator;
 import java.util.Scanner;
 
 import org.estg.ed.Divisions.Division;
@@ -14,6 +15,7 @@ import org.estg.ed.Players.Player;
 
 import Lists.ArrayUnorderedList;
 
+//@author Joana Rodrigues 8240334
 /**
  * Class responsible for initializing the game, loading or creating the maze and its content,
  * and managing the selection of game modes (Manual or Automatic) and the number of players.
@@ -35,42 +37,57 @@ public class GameInitializer {
      */
     public boolean startGameSession(String mapPath, Scanner scanner) {
         System.out.println("\n=== Labyrinth of Glory Simulator ===\n");
-
         MazeManager mazeManager = new MazeManager();
         Maze maze = mazeManager.loadMazeWithContents(mapPath, ENIGMAS_FILE);
-
         if (maze == null) {
             System.err.println("ERROR: Failed to load the maze.");
             return false;
         }
-
         System.out.println("Map '" + maze.getName() + "' loaded successfully!");
-
         ArrayUnorderedList<Player> players = selectModeAndCreatePlayers(scanner);
-
         if (players.isEmpty()) {
             System.err.println("No players created. Ending session.");
             return false;
         }
 
-        System.out.println("\n--- ENTRY POINTS ---");
-        for (Player player : players) {
-
-            System.out.println("\n--- " + player.getName() + ", choose your entry ---");
-
-            Division initialPosition = selectEntryDivisionForPlayer(maze.getD(), scanner, player.getName());
-
-            if (initialPosition == null) {
-                System.err.println("ERROR: Maze does not have any entry division (ENTRY). Ending session.");
-                return false;
+        ArrayUnorderedList<Division> entryDivisions = new ArrayUnorderedList<>();
+        Iterator<Division> divisionIterator = maze.getD().iterator();
+        while (divisionIterator.hasNext()) {
+            Division div = divisionIterator.next();
+            if (div.getDt() == DivisionType.ENTRY) {
+                entryDivisions.addToRear(div);
             }
+        }
 
-            player.setCurrentDivision(initialPosition);
+        if (entryDivisions.isEmpty()) {
+            System.err.println("ERROR: Maze does not have any entry division (ENTRY). Ending session.");
+            return false;
+        }
+
+        for (Player player : players) {
+            if (!player.getName().startsWith("Bot")) {
+                System.out.println("\n--- " + player.getName() + ", choose your entry ---");
+                Division initialPosition = selectEntryDivisionForPlayer(maze.getD(), scanner, player.getName());
+                player.setCurrentDivision(initialPosition);
+            } else {
+                int randomIndex = (int) (Math.random() * entryDivisions.size());
+                Iterator<Division> entryIterator = entryDivisions.iterator();
+                Division randomEntry = null;
+                int currentIndex = 0;
+                while (entryIterator.hasNext()) {
+                    randomEntry = entryIterator.next();
+                    if (currentIndex == randomIndex) {
+                        break;
+                    }
+                    currentIndex++;
+                }
+                player.setCurrentDivision(randomEntry);
+                System.out.println(player.getName() + " is assigned to Division " + randomEntry.getId());
+            }
         }
 
         GameManager gameManager = new GameManager(maze, players);
         gameManager.startGame();
-
         return askPlayAgain(scanner);
     }
 

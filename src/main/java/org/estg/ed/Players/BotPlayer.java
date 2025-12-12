@@ -8,6 +8,7 @@ import org.estg.ed.Hall.Hallway;
 
 import Lists.DoublyLinkedUnorderedList;
 
+//@author Joana Rodrigues 8240334
 /**
  * Represents an automated player (Bot) in the Labyrinth of Glory game
  * simulator.

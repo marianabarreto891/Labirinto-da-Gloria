@@ -9,13 +9,14 @@ import Graphs.Network;
 import Lists.ArrayUnorderedList;
 import Lists.DoublyLinkedUnorderedList;
 
+//@author Joana Rodrigues 8240334
 /**
  * MazeNetwork is a specialized extension of Network<Division> designed for the Labyrinth game.
- * <p>
+ *
  * It manages the graph structure of the maze, storing divisions as vertices and hallways as edges.
  * Provides methods for accessing start and central divisions, adjacent divisions, available hallways,
  * and calculating shortest paths.
- * </p>
+ * 
  */
 public class MazeNetwork extends Network<Division> {
 

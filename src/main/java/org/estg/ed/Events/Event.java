@@ -2,7 +2,7 @@ package org.estg.ed.Events;
 
 import org.estg.ed.Players.Player;
 
-
+ //@author Joana Rodrigues 8240334
 
 /**
  * The base class for all random events that can occur inside a Hallway.

@@ -2,6 +2,7 @@ package org.estg.ed.Events;
 
 import org.estg.ed.Players.Player;
 
+//@author Joana Rodrigues 8240334
 /**
  * A specific type of Event that forces the player to move back a certain number of divisions.
  * The movement back is limited by the position held immediately after a position swap, if applicable.

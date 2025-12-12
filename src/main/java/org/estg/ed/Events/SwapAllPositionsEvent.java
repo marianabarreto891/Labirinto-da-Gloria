@@ -9,6 +9,7 @@ import org.estg.ed.Players.Player;
 import Exceptions.EmptyCollectionException; 
 import Lists.ArrayUnorderedList;
 
+//@author Joana Rodrigues 8240334
 /**
  * Event that randomly swaps the positions of all eligible players.
  * 

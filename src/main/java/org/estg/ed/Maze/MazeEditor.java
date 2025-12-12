@@ -9,6 +9,7 @@ import org.estg.ed.Hall.HallwayManager;
 
 import Lists.ArrayUnorderedList;
 
+//@author Joana Rodrigues 8240334
 /**
  * Class responsible for managing and editing maze maps.
  * Supports creating and saving new maps in JSON format.

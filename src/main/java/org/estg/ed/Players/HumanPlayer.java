@@ -8,6 +8,7 @@ import org.estg.ed.Hall.Hallway;
 
 import Lists.DoublyLinkedUnorderedList;
 
+//@author Joana Rodrigues 8240334
 /**
  * Represents a human-controlled player (Manual mode) in the Labyrinth of Glory
  * game simulator.
@@ -58,6 +59,7 @@ public class HumanPlayer extends Player {
         return sc.nextLine();
     }
 
+   
     /**
      * Determines the human player's next move by prompting the user for input via
      * the console.
@@ -95,8 +97,7 @@ public class HumanPlayer extends Player {
             while (iterator.hasNext()) {
                 Hallway hallway = iterator.next();
                 hallwayOptions[i] = hallway;
-                System.out.println("[" + (i + 1) + "] Go to:  " + hallway.getDestination().getId()
-                        + " (" + hallway.toString() + ")");
+                System.out.println("[" + (i + 1) + "] Go to Hallway number ->  " + hallway.getDestination().getId());
                 i++;
             }
 

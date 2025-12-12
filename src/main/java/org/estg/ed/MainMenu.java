@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import org.estg.ed.Manager.GameInitializer;
 
+//@author Joana Rodrigues 8240334
 /**
  * Main menu for the Labyrinth of Glory game.
  * Handles the overall application flow, including starting game sessions,

@@ -2,6 +2,7 @@ package org.estg.ed.Events;
 
 import org.estg.ed.Players.Player;
 
+//@author Joana Rodrigues 8240334
 /**
  * Interface that defines the contract for all random events that can occur in a Hallway.
  * Any class implementing this interface guarantees the definition of an effect

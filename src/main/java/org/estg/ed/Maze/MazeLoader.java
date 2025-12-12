@@ -13,7 +13,7 @@ import org.json.JSONTokener;
 
 import Lists.ArrayUnorderedList;
 
-
+//@author Joana Rodrigues 8240334
 /**
  * Class responsible for loading and parsing the maze structure from a JSON file.
  *

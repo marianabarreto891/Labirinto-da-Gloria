@@ -1,15 +1,17 @@
 package org.estg.ed.Manager;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 
 import org.estg.ed.Players.Player;
+
 import Lists.ArrayUnorderedList;
 
+//@author Joana Rodrigues 8240334
 /**
  * Manages the generation and saving of game reports in JSON format.
  * Creates comprehensive reports of player performance and game history.
