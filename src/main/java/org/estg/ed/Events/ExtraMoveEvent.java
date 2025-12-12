@@ -3,11 +3,11 @@ package org.estg.ed.Events;
 import org.estg.ed.Players.Player;
 
 
-//@author Joana Rodrigues 8240334
-
 /**
  * A specific type of Event that grants the player one or more extra moves (turns) immediately.
- * [cite_start]This is one of the random effects that can occur when a player traverses a Hallway[cite: 38].
+ * This is one of the random effects that can occur when a player traverses a Hallway.
+ * 
+ * @author Joana Rodrigues 8240334
  */
 public class ExtraMoveEvent extends Event {
 

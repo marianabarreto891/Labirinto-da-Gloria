@@ -2,7 +2,15 @@ package org.estg.ed.Content;
 
 import org.estg.ed.Divisions.DivisionType;
 import org.estg.ed.Players.Player;
-//@author Mariana Barreto 8240344
+
+/**
+ * Represents the abstract base for any interactive content found within a maze division.
+ *
+ * This class serves as the parent for specific game challenges, such as Enigmas and Levers.
+ * It manages the common state of whether a challenge has been solved or activated.
+ *
+ * @author Mariana Barreto 8240344
+ */
 public abstract class Content {
     private boolean solved;
 
@@ -10,6 +18,13 @@ public abstract class Content {
         this.solved = false;
     }
 
+    /**
+     * Retrieves the specific type of this content.
+     *
+     * This method allows other components to identify if the content is a type defined in the DivisionType enum.
+     *
+     * @return The specific DivisionType associated with this content subclass.
+     */
     public abstract DivisionType getType();
 
     /**

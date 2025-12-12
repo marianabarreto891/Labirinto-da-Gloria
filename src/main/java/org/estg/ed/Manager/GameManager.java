@@ -14,11 +14,13 @@ import org.estg.ed.Players.Player;
 import Lists.ArrayUnorderedList;
 import Lists.DoublyLinkedUnorderedList;
 
-//@author Mariana Barreto 8240344
+
 /**
  * Manages the core game logic for the Labyrinth of Glory.
  *
  * ATUALIZADO: Inicializa eventos dos corredores que precisam do GameManager
+ * 
+ * @author Joana Rodrigues 8240334
  */
 public class GameManager {
     private final MazeNetwork mazeNetwork;

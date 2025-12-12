@@ -10,10 +10,12 @@ import org.estg.ed.Lever.Lever;
 
 import Lists.ArrayUnorderedList;
 
-//@author Mariana Barreto 8240344
+
 /**
  * Class responsible for loading mazes and populating them with content,
  * such as enigmas and levers.
+ * 
+ * @author Mariana Barreto 8240344
  */
 public class MazeManager {
 

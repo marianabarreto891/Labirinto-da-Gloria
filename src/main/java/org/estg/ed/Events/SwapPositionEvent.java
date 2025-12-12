@@ -8,7 +8,7 @@ import org.estg.ed.Players.Player;
 
 import Lists.ArrayUnorderedList;
 
-//@author Joana Rodrigues 8240334
+
 /**
  * A specific type of Event that swaps the position of the current player
  * with another chosen player on the board.
@@ -16,6 +16,7 @@ import Lists.ArrayUnorderedList;
  * This event affects one other player and is used to introduce unpredictability
  * and interaction within the game. It is triggered when a player traverses a Hallway.
  * 
+ * @author Joana Rodrigues 8240334
  */
 public class SwapPositionEvent extends Event {
 

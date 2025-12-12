@@ -6,13 +6,15 @@ import org.estg.ed.Hall.Hallway;
 
 import Lists.ArrayUnorderedList;
 
-//@author Mariana Barreto 8240344
+
 /**
  * Represents the physical structure of the labyrinth in the game.
  *
  * This class acts as a container for the entire graph data structure, holding
  * the list of all Divisions (nodes) and Hallways (edges) that make up the map.
  * It also provides utility methods to locate specific key rooms, such as the central room.
+ * 
+ * @author Mariana Barreto 8240344
  */
 public class Maze {
     private int id;

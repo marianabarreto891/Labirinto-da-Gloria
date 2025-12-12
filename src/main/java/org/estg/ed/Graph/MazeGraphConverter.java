@@ -7,14 +7,13 @@ import org.estg.ed.Maze.Maze;
 
 import Lists.ArrayUnorderedList;
 
-
-//@author Mariana Barreto 8240344
 /**
  * Responsible for converting a Maze data model into a graph representation.
  * 
  * This class transforms the Maze object into a MazeNetwork, making it suitable
  * for graph algorithms and network operations.
  * 
+ * @author Mariana Barreto 8240344
  */
 public class MazeGraphConverter {
 

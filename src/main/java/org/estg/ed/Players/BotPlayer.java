@@ -8,13 +8,14 @@ import org.estg.ed.Hall.Hallway;
 
 import Lists.DoublyLinkedUnorderedList;
 
-//@author Joana Rodrigues 8240334
 /**
  * Represents an automated player (Bot) in the Labyrinth of Glory game
  * simulator.
  * This class extends the abstract Player base and implements automated
  * decision-making
  * logic, fulfilling the requirement for the Automatic game mode.
+ * 
+ * @author Joana Rodrigues 8240334 and Mariana Barreto 8240344
  */
 public class BotPlayer extends Player {
 

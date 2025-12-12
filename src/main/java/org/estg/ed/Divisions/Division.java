@@ -2,7 +2,7 @@ package org.estg.ed.Divisions;
 
 import org.estg.ed.Content.Content;
 
-//@author Mariana Barreto 8240344
+
 /**
  * Represents a vertex (node) in the game map network.
  * 
@@ -21,6 +21,7 @@ public class Division {
      * Initializes with no content.
      *
      * @param id The unique integer identifier for this division.
+     * @param dt The classification type of the division
      */
     public Division(int id, DivisionType dt) {
         this.id = id;
@@ -28,6 +29,11 @@ public class Division {
         this.content = null;
     }
 
+    /**
+     * Constructs a new Division object with only a unique identifier.
+     *
+     * @param id The unique integer identifier for this division.
+     */
     public Division(int id) {
         this.id = id;
     }
@@ -96,10 +102,20 @@ public class Division {
         return sb.toString();
     }
 
+    /**
+     * Sets the game content for this division.
+     *
+     * @param content The content to assign to this room.
+     */
     public void setContent(Content content) {
         this.content = content;
     }
 
+    /**
+     * Returns the content associated with this division.
+     *
+     * @return The content object, or null if the room is empty.
+     */
     public Content getContent() {
         return content;
     }

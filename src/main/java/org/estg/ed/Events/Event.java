@@ -2,13 +2,15 @@ package org.estg.ed.Events;
 
 import org.estg.ed.Players.Player;
 
- //@author Joana Rodrigues 8240334
+ 
 
 /**
  * The base class for all random events that can occur inside a Hallway.
  * It ensures that every event knows how to apply its specific effect to a player.
  * The core logic for effects like gaining turns, swapping positions, or moving back
  * will be defined in subclasses.
+ * 
+ * @author Joana Rodrigues 8240334
  */
 public abstract class Event implements IEvent {
 

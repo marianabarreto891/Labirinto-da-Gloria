@@ -13,12 +13,14 @@ import org.json.JSONTokener;
 
 import Lists.ArrayUnorderedList;
 
-//@author Joana Rodrigues 8240334
+
 /**
  * Class responsible for loading and parsing the maze structure from a JSON file.
  *
  * This class handles the deserialization of map data, converting raw JSON objects
  * into the game's internal graph representation (Maze, Divisions, and Hallways).
+ * 
+ * @author Mariana Barreto 8240344
  */
 public class MazeLoader {
 

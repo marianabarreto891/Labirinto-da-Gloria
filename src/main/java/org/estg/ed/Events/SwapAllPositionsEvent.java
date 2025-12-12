@@ -9,7 +9,7 @@ import org.estg.ed.Players.Player;
 import Exceptions.EmptyCollectionException; 
 import Lists.ArrayUnorderedList;
 
-//@author Joana Rodrigues 8240334
+
 /**
  * Event that randomly swaps the positions of all eligible players.
  * 
@@ -17,6 +17,7 @@ import Lists.ArrayUnorderedList;
  * If only one eligible player exists, no position change occurs.
  * Positions are shuffled using the Fisher-Yates algorithm.
  * 
+ * @author Joana Rodrigues 8240334
  */
 public class SwapAllPositionsEvent extends Event {
 

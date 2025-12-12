@@ -8,12 +8,14 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import Lists.ArrayUnorderedList;
-//@author Mariana Barreto 8240344
+
 /**
  * Utility class responsible for loading and parsing Enigma definitions from a JSON file.
  *
  * This class handles the deserialization of game content, converting raw JSON data
  * into usable Enigma objects that can be distributed throughout the maze.
+ * 
+ * @author Mariana Barreto 8240344
  */
 public class EnigmaLoader {
     

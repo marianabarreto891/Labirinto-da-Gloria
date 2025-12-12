@@ -4,12 +4,14 @@ import org.estg.ed.Content.Content;
 import org.estg.ed.Divisions.DivisionType;
 import org.estg.ed.Players.Player;
 
-//@author Mariana Barreto 8240344
+
 /**
  * Represents a question within the maze.
  *
  * This class extends the generic Content to provide specific logic for question-and-answer
  * interactions. It holds a question, a list of possible options, and the index of the correct answer.
+ * 
+ * @author Mariana Barreto 8240344
  */
 public class Enigma extends Content {
 

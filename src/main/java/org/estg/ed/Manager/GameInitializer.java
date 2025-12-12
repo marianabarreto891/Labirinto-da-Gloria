@@ -15,11 +15,13 @@ import org.estg.ed.Players.Player;
 
 import Lists.ArrayUnorderedList;
 
-//@author Joana Rodrigues 8240334
+
 /**
  * Class responsible for initializing the game, loading or creating the maze and its content,
  * and managing the selection of game modes (Manual or Automatic) and the number of players.
  * * NOTE: This class is NOT the entry point. Use MainMenu.java to run the program.
+ * 
+ * @author Joana Rodrigues 8240334
  */
 public class GameInitializer {
 

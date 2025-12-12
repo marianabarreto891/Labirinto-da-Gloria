@@ -4,13 +4,14 @@ import org.estg.ed.Divisions.Division;
 import org.estg.ed.Events.Event;
 import org.estg.ed.Players.Player;
 
-//@author Joana Rodrigues 8240334
+
 /**
  * Represents a path (edge) connecting two Divisions in the Maze.
  * 
  * A Hallway may contain a random Event that is activated when a player crosses it.
  * Supports lazy initialization for events requiring the GameManager.
  * 
+ * @author Joana Rodrigues 8240334
  */
 public class Hallway {
 

@@ -15,6 +15,8 @@ import org.estg.ed.Manager.GameManager;
  * Supports lazy initialization of events for editor mode and
  * immediate event creation when GameManager is available.
  * </p>
+ * 
+ * @author Joana Rodrigues 8240334
  */
 public class HallwayManager {
 

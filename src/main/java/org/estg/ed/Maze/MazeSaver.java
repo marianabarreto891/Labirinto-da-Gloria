@@ -11,10 +11,12 @@ import org.json.JSONObject;
 
 import Lists.ArrayUnorderedList;
 
-//@author Joana Rodrigues 8240334
+
 /**
  * Class responsible for saving a Maze object to a JSON file.
  * It serializes the maze structure including divisions and hallways.
+ * 
+ * @author Joana Rodrigues 8240334
  */
 public class MazeSaver {
 

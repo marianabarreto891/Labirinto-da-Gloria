@@ -2,10 +2,12 @@ package org.estg.ed.Events;
 
 import org.estg.ed.Players.Player;
 
-//@author Joana Rodrigues 8240334
+
 /**
  * A specific type of Event that prevents the player from moving for a specified number of turns.
  * This effect alters the turn sequencing for the player.
+ * 
+ * @author Joana Rodrigues 8240334
  */
 public class SkipTurnEvent extends Event {
 

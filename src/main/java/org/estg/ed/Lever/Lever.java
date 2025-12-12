@@ -6,12 +6,14 @@ import org.estg.ed.Content.Content;
 import org.estg.ed.Divisions.DivisionType;
 import org.estg.ed.Players.Player;
 
-//@author Mariana Barreto 8240344
+
 /**
  * Represents a Lever obstacle within a room in the maze.
  *
  * This class extends the generic Content to provide specific logic. A lever requires the player to guess a number to "activate" it, typically
  * opening a blocked path or allowing progress.
+ * 
+ * @author Mariana Barreto 8240344
  */
 public class Lever extends Content {
 

@@ -12,8 +12,6 @@ import Exceptions.EmptyCollectionException;
 import Interfaces.UnorderedListADT;
 import Lists.DoublyLinkedUnorderedList;
 
-
-//@author Joana Rodrigues 8240334
 /**
  * Represents a Player participating in the Labyrinth of Glory game simulator.
  * This abstract class serves as the base for concrete player types (Human and
@@ -22,6 +20,8 @@ import Lists.DoublyLinkedUnorderedList;
  * effects, and reporting.
  * It is designed to track player progression and manage temporary effects from
  * random events.
+ * 
+ * @author Joana Rodrigues 8240334
  */
 public abstract class Player implements Comparable<Player> {
 

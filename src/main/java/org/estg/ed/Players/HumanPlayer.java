@@ -8,13 +8,14 @@ import org.estg.ed.Hall.Hallway;
 
 import Lists.DoublyLinkedUnorderedList;
 
-//@author Joana Rodrigues 8240334
 /**
  * Represents a human-controlled player (Manual mode) in the Labyrinth of Glory
  * game simulator.
  * This class extends the abstract Player base and implements decision-making
  * logic based on user input. It fulfills the
  * requirement for the Manual game mode.
+ * 
+ * @author Joana Rodrigues 8240334 and Mariana Barreto 8240344
  */
 public class HumanPlayer extends Player {
 
