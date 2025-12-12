@@ -10,11 +10,12 @@ import Lists.ArrayUnorderedList;
 import Lists.DoublyLinkedUnorderedList;
 
 /**
- * MazeNetwork is a specialized extension of Network<Division> designed specifically
- * for the Labyrinth game. It manages the graph structure of the maze and provides
- * additional methods for maze-specific operations.
- * 
- * @author Your Group
+ * MazeNetwork is a specialized extension of Network<Division> designed for the Labyrinth game.
+ * <p>
+ * It manages the graph structure of the maze, storing divisions as vertices and hallways as edges.
+ * Provides methods for accessing start and central divisions, adjacent divisions, available hallways,
+ * and calculating shortest paths.
+ * </p>
  */
 public class MazeNetwork extends Network<Division> {
 
@@ -61,7 +62,7 @@ public class MazeNetwork extends Network<Division> {
     /**
      * Sets the central room (goal) of the maze.
      *
-     * @param centralRoom the goal division
+     * @param centralRoom the central division
      */
     public void setCentralRoom(Division centralRoom) {
         this.centralRoom = centralRoom;
@@ -77,34 +78,33 @@ public class MazeNetwork extends Network<Division> {
     }
 
     /**
-     * Adds a hallway (edge with event) to the maze network.
-     * This method stores the hallway for later retrieval and event management.
+     * Adds a hallway to the maze network.
+     * This method adds the hallway to the internal list and adds a weighted edge to the graph.
      *
      * @param hallway the hallway to add
      */
     public void addHallway(Hallway hallway) {
         if (hallway != null) {
             hallways.addToRear(hallway);
-            // Add the weighted edge to the network graph
             this.addEdge(hallway.getOrigin(), hallway.getDestination(), hallway.getWeight());
         }
     }
 
     /**
-     * Retrieves all hallways in the maze.
+     * Gets all hallways in the maze network.
      *
-     * @return an unordered list of all hallways
+     * @return an unordered list of hallways
      */
     public ArrayUnorderedList<Hallway> getHallways() {
         return hallways;
     }
 
     /**
-     * Finds a hallway between two divisions.
+     * Finds a hallway connecting two divisions.
      *
      * @param origin the origin division
      * @param destination the destination division
-     * @return the hallway connecting these divisions, or null if not found
+     * @return the hallway connecting these divisions or null if not found
      */
     public Hallway findHallway(Division origin, Division destination) {
         for (Hallway hallway : hallways) {
@@ -117,10 +117,9 @@ public class MazeNetwork extends Network<Division> {
     }
 
     /**
-     * Gets all adjacent divisions from a given division.
-     * Returns divisions that are directly connected by hallways.
+     * Returns all adjacent divisions from a given division.
      *
-     * @param division the current division
+     * @param division the division to check
      * @return a list of adjacent divisions
      */
     public DoublyLinkedUnorderedList<Division> getAdjacentDivisions(Division division) {
@@ -141,10 +140,8 @@ public class MazeNetwork extends Network<Division> {
     }
 
     /**
-     * Gets all adjacent hallways from a given division.
-     * Returns hallways that originate from the given division and don't lead to entry divisions.
-     * 
-     * CORRIGIDO: Agora apenas retorna corredores diretos (adjacentes)
+     * Returns hallways that are available from a given division.
+     * Excludes hallways leading to entry divisions.
      *
      * @param division the current division
      * @return a list of available hallways
@@ -152,22 +149,14 @@ public class MazeNetwork extends Network<Division> {
     public DoublyLinkedUnorderedList<Hallway> getAvailableHallways(Division division) {
         DoublyLinkedUnorderedList<Hallway> availableHallways = new DoublyLinkedUnorderedList<>();
 
-        // Percorrer todos os corredores e adicionar os que saem desta divisão
         for (Hallway hallway : hallways) {
-            // Verifica se o corredor sai da divisão atual
             if (hallway.getOrigin().equals(division)) {
                 Division destination = hallway.getDestination();
-                
-                // Não adicionar se o destino for uma entrada (exceto a sala central)
                 if (!isEntryDivision(destination)) {
                     availableHallways.addToRear(hallway);
                 }
-            }
-            // Também verificar na direção inversa (grafo não direcionado)
-            else if (hallway.getDestination().equals(division)) {
+            } else if (hallway.getDestination().equals(division)) {
                 Division destination = hallway.getOrigin();
-                
-                // Não adicionar se o destino for uma entrada (exceto a sala central)
                 if (!isEntryDivision(destination)) {
                     availableHallways.addToRear(hallway);
                 }
@@ -178,43 +167,42 @@ public class MazeNetwork extends Network<Division> {
     }
 
     /**
-     * Checks if a division is an entry division.
-     * Entry divisions are only the start division, not the central room.
+     * Checks if a division is the entry division.
      *
      * @param division the division to check
-     * @return true if the division is an entry point, false otherwise
+     * @return true if it is the start division, false otherwise
      */
     public boolean isEntryDivision(Division division) {
         return division.equals(startDivision);
     }
 
     /**
-     * Checks if a division is the central room (goal).
+     * Checks if a division is the central room.
      *
      * @param division the division to check
-     * @return true if the division is the central room, false otherwise
+     * @return true if it is the central room, false otherwise
      */
     public boolean isCentralRoom(Division division) {
         return division.equals(centralRoom);
     }
 
     /**
-     * Gets the shortest path between two divisions.
+     * Returns an iterator for the shortest path between two divisions.
      *
      * @param startDivision the starting division
      * @param targetDivision the target division
-     * @return an iterator of divisions in the shortest path
+     * @return an iterator over divisions in the shortest path
      */
     public Iterator<Division> getShortestPath(Division startDivision, Division targetDivision) {
         return this.iteratorShortestPath(startDivision, targetDivision);
     }
 
     /**
-     * Calculates the distance (weight) of the shortest path between two divisions.
+     * Returns the distance of the shortest path between two divisions.
      *
      * @param startDivision the starting division
      * @param targetDivision the target division
-     * @return the weight of the shortest path, or POSITIVE_INFINITY if no path exists
+     * @return the weight of the shortest path or POSITIVE_INFINITY if no path exists
      */
     public double getShortestPathDistance(Division startDivision, Division targetDivision) {
         return this.shortestPathWeight(startDivision, targetDivision);
@@ -223,7 +211,7 @@ public class MazeNetwork extends Network<Division> {
     /**
      * Returns the number of divisions (vertices) in the maze network.
      *
-     * @return the number of divisions
+     * @return the count of divisions
      */
     public int getDivisionsCount() {
         return numVertices;
@@ -232,16 +220,16 @@ public class MazeNetwork extends Network<Division> {
     /**
      * Returns the number of hallways (edges) in the maze network.
      *
-     * @return the number of hallways
+     * @return the count of hallways
      */
     public int getHallwaysCount() {
         return hallways.size();
     }
 
     /**
-     * Checks if the maze is properly connected from the start to the central room.
+     * Checks if the maze is winnable (a path exists from start to central room).
      *
-     * @return true if a path exists from start to central room, false otherwise
+     * @return true if a path exists, false otherwise
      */
     public boolean isWinnable() {
         if (startDivision == null || centralRoom == null) {
@@ -249,13 +237,13 @@ public class MazeNetwork extends Network<Division> {
         }
 
         Iterator<Division> path = this.getShortestPath(startDivision, centralRoom);
-        return path.hasNext(); // If there's at least one element, a path exists
+        return path.hasNext();
     }
 
     /**
-     * Gets a string representation of the maze network including divisions and hallways.
+     * Returns a string representation of the maze network.
      *
-     * @return a formatted string describing the network
+     * @return a formatted string describing divisions, hallways, and status
      */
     @Override
     public String toString() {

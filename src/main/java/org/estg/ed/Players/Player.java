@@ -301,7 +301,9 @@ public abstract class Player implements Comparable<Player> {
     return this.name.compareTo(other.name);
 
     }
-/**
+
+    
+    /**
      * Generates a complete record of the player's journey in JSON
      * format.
      * Includes path history, obstacles faced, enigmas solved, and effects applied.
@@ -316,18 +318,18 @@ public abstract class Player implements Comparable<Player> {
         json.append("  \"pathHistory\": [\n");
 
         Iterator<Object> iterator = this.pathHistory.iterator();
-        boolean firstItem = true; // Para gerir a vírgula após pular um null
+        boolean firstItem = true; 
 
         while (iterator.hasNext()) {
             Object item = iterator.next();
             
-            // ⭐ CORREÇÃO: Verifica se o item é nulo para evitar NullPointerException
+            
             if (item == null) {
-                // Se o item for nulo (causa do erro), ignoramos esta entrada
+               
                 continue; 
             }
             
-            // Adiciona a vírgula antes do item se não for o primeiro item válido
+            
             if (!firstItem) {
                 json.append(",\n");
             }
@@ -336,20 +338,12 @@ public abstract class Player implements Comparable<Player> {
 
             json.append("    {\n");
             json.append("      \"type\": \"").append(itemType).append("\",\n");
-            // Usa replace para escapar as aspas dentro da string JSON
+            
             json.append("      \"details\": \"").append(item.toString().replace("\"", "\\\"")).append("\"\n");
             json.append("    }");
             
-            firstItem = false; // Define que já processámos o primeiro item válido
+            firstItem = false; 
         }
-
-        // Se houver pelo menos um item válido, a última vírgula foi adicionada no loop.
-        // Se a lista não estiver vazia (mas terminamos o loop), o último elemento é 
-        // a única forma de garantirmos que a vírgula é adicionada corretamente
-        // no formato do seu código original (que já tinha um erro potencial).
-        // A lógica de controle de vírgulas foi ajustada ligeiramente acima, 
-        // mas a linha final ',\n' é removida se o último elemento for processado.
-        
         json.append("\n  ],\n");
 
         json.append("  \"turnsBlockedTotal\": ").append(this.totalTurnsBlockedAccumulated).append(",\n");

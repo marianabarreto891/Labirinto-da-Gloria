@@ -14,7 +14,7 @@ import org.estg.ed.Players.Player;
  */
 public class Lever extends Content {
 
-    private int correctOption;
+    private final int correctOption;
     private static final int TOTAL_OPTIONS = 3;
 
 

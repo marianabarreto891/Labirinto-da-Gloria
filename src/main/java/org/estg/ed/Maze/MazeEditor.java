@@ -2,7 +2,7 @@ package org.estg.ed.Maze;
 
 import org.estg.ed.Divisions.Division;
 import org.estg.ed.Divisions.DivisionType;
-import org.estg.ed.Graph.MazeGraphConverter; // Importa o conversor corrigido
+import org.estg.ed.Graph.MazeGraphConverter;
 import org.estg.ed.Graph.MazeNetwork;
 import org.estg.ed.Hall.Hallway;
 import org.estg.ed.Hall.HallwayManager;
@@ -10,50 +10,46 @@ import org.estg.ed.Hall.HallwayManager;
 import Lists.ArrayUnorderedList;
 
 /**
- * Classe responsável por gerir e editar mapas do labirinto (Maze).
- * Cumpre o requisito de criação e gravação de novos mapas no formato JSON.
+ * Class responsible for managing and editing maze maps.
+ * Supports creating and saving new maps in JSON format.
  */
 public class MazeEditor {
     
     private Maze currentMaze;
-    private MazeNetwork currentNetwork; // O grafo MazeNetwork (corrigido)
+    private MazeNetwork currentNetwork;
 
     /**
-     * Construtor para iniciar um novo mapa vazio.
+     * Constructor to initialize a new empty maze.
      */
     public MazeEditor() {
-        // Inicializa o Maze com listas vazias
         ArrayUnorderedList<Hallway> h = new ArrayUnorderedList<>();
         ArrayUnorderedList<Division> d = new ArrayUnorderedList<>();
         this.currentMaze = new Maze(1, "New Unsaved Map", h, d);
-        
-        // Usa o MazeGraphConverter CORRIGIDO
         this.currentNetwork = MazeGraphConverter.convertMazeToNetwork(currentMaze);
         System.out.println("New empty map created.");
     }
     
     /**
-     * Carrega um mapa existente para edição.
-     * * @param filename O nome do ficheiro JSON do mapa.
+     * Loads an existing maze for editing.
+     * 
+     * @param filename The JSON file name of the maze
      */
     public void loadMaze(String filename) {
         this.currentMaze = MazeLoader.loadMazeFromJSON(filename);
         
         if (this.currentMaze != null) {
-            // Usa o MazeGraphConverter CORRIGIDO
             this.currentNetwork = MazeGraphConverter.convertMazeToNetwork(currentMaze);
             System.out.println("Map '" + currentMaze.getName() + "' loaded for editing.");
         } else {
             System.err.println("ERROR: Failed to load map from file: " + filename);
         }
     }
-    
-    // --- MÉTODOS DE EDIÇÃO ---
 
     /**
-     * Adiciona uma nova divisão (vértice) ao mapa.
-     * * @param id O ID único da nova divisão.
-     * @param type O tipo de divisão (ENTRY, ENIGMA, etc.).
+     * Adds a new division (vertex) to the maze.
+     * 
+     * @param id The unique ID of the new division
+     * @param type The type of division (ENTRY, ENIGMA, etc.)
      */
     public void addDivision(int id, DivisionType type) {
         if (findDivision(id) != null) {
@@ -62,22 +58,18 @@ public class MazeEditor {
         }
         
         Division newDiv = new Division(id, type);
-        
-        // 1. Adiciona à lista de Divisões do Maze (para guardar em JSON)
         currentMaze.getD().addToRear(newDiv); 
-        
-        // 2. Adiciona ao Grafo (MazeNetwork) para a lógica do jogo
         currentNetwork.addVertex(newDiv);    
-        
         System.out.println("Division " + id + " (" + type + ") added.");
     }
 
     /**
-     * Conecta duas divisões com um corredor (aresta).
-     * * @param id1 ID da divisão de origem.
-     * @param id2 ID da divisão de destino.
-     * @param weight O peso/custo do corredor.
-     * @param eventId O ID do evento associado (0 para nenhum).
+     * Connects two divisions with a hallway (edge).
+     * 
+     * @param id1 ID of the origin division
+     * @param id2 ID of the destination division
+     * @param weight The weight/cost of the hallway
+     * @param eventId The ID of the associated event (0 for none)
      */
     public void connectDivisions(int id1, int id2, double weight, int eventId) {
         Division div1 = findDivision(id1);
@@ -88,23 +80,19 @@ public class MazeEditor {
              return;
         }
         
-        // Cria o Hallway usando o HallwayManager (que cria o objeto Event)
         Hallway newHall = HallwayManager.createHallway(div1, div2, eventId, weight);
-        
-        // 1. Adiciona à lista de Hallways do Maze (para guardar em JSON)
         currentMaze.getH().addToRear(newHall);     
-        
-        // 2. Adiciona ao Grafo (MazeNetwork)
         currentNetwork.addEdge(div1, div2, weight); 
-        
-        // Também é útil manter a lista interna de hallways do MazeNetwork atualizada
         currentNetwork.hallways.addToRear(newHall); 
 
         System.out.println("Hallway (" + id1 + " <-> " + id2 + ", Weight: " + weight + ") created.");
     }
 
     /**
-     * Define o nome e ID do mapa (metadados).
+     * Sets the metadata of the maze, including ID and name.
+     * 
+     * @param id The ID of the maze
+     * @param name The name of the maze
      */
     public void setMetadata(int id, String name) {
         currentMaze.setId(id);
@@ -113,20 +101,20 @@ public class MazeEditor {
     }
     
     /**
-     * Guarda o estado atual do mapa no formato JSON (usa o MazeSaver corrigido).
-     * * @param filename O nome do ficheiro (ex: "novo_mapa.json").
+     * Saves the current maze state to a JSON file.
+     * 
+     * @param filename The file name (e.g., "new_map.json")
      */
     public void saveMaze(String filename) {
         MazeSaver.saveMazeToJSON(currentMaze, filename);
         System.out.println(" Map '" + currentMaze.getName() + "' saved successfully to " + filename + ".");
     }
     
-    // --- HELPER ---
-    
     /**
-     * Pesquisa uma divisão pelo ID na lista de divisões do Maze.
-     * * @param id O ID da divisão.
-     * @return A Division encontrada ou null.
+     * Finds a division by its ID in the maze.
+     * 
+     * @param id The ID of the division
+     * @return The found Division or null if not found
      */
     private Division findDivision(int id) {
         for (Division div : currentMaze.getD()) {
@@ -137,11 +125,11 @@ public class MazeEditor {
         return null;
     }
 
-
     /**
-     * Getter para o objeto Maze que está atualmente a ser editado.
-     * Necessário para inspeção (ex: na consola do editor interativo).
-     * @return O objeto Maze atual.
+     * Returns the current maze being edited.
+     * Useful for inspection in the interactive editor console.
+     * 
+     * @return The current Maze object
      */
     public Maze getCurrentMaze() {
         return currentMaze;

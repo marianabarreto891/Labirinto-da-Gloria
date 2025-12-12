@@ -8,12 +8,13 @@ import org.estg.ed.Players.Player;
 
 import Lists.ArrayUnorderedList;
 
-
 /**
  * A specific type of Event that swaps the position of the current player
  * with another chosen player on the board.
- * This event is a core part of the game's unpredictability and interaction,
- * and is one of the random effects that can occur in Hallways.
+ * <p>
+ * This event affects one other player and is used to introduce unpredictability
+ * and interaction within the game. It is triggered when a player traverses a Hallway.
+ * </p>
  */
 public class SwapPositionEvent extends Event {
 
@@ -21,7 +22,6 @@ public class SwapPositionEvent extends Event {
 
     /**
      * Constructs a SwapPositionEvent with a reference to the GameManager.
-     * The GameManager is needed to access the full list of players.
      *
      * @param gameManager the game manager instance
      */
@@ -31,56 +31,42 @@ public class SwapPositionEvent extends Event {
 
     /**
      * Applies the effect of swapping positions between the player who triggered the event
-     * and a target player determined by the game mode (Manual or Automatic).
-     * The method updates the current position of both players but must ensure the
-     * safe recoil position is not affected by the change.
+     * and a target player determined randomly among other players.
      *
-     * @param player The Player who activated the event by traversing the Hallway.
+     * @param player The Player who activated the event
      */
     @Override
     public void applyEffect(Player player) {
-        // Encontra o jogador alvo para a troca
         Player targetPlayer = findTargetPlayer(player);
 
         if (targetPlayer != null) {
-            
-            // 1. Guarda as posições atuais (as "antigas")
             Division playerCurrentPos = player.getCurrentDivision(); 
             Division targetCurrentPos = targetPlayer.getCurrentDivision();
 
-            // 2. Executa a troca (set current position)
             player.setCurrentDivision(targetCurrentPos); 
             targetPlayer.setCurrentDivision(playerCurrentPos);
             
-            // 3. Regista o evento no histórico de ambos os jogadores
             player.registerEventPositionChange(this, playerCurrentPos); 
             targetPlayer.registerEventPositionChange(this, targetCurrentPos); 
             
             System.out.println(" POSITION SWAP! " + player.getName() + " swapped position with " 
                     + targetPlayer.getName() + "!");
-            
-            // ⭐ CORREÇÃO AQUI: Usar a posição ALVO antiga para o jogador ATIVADOR
             System.out.println("   " + player.getName() + " is now at division " + targetCurrentPos.getId()); 
-            
-            // ⭐ CORREÇÃO AQUI: Usar a posição ATIVADORA antiga para o jogador ALVO
             System.out.println("   " + targetPlayer.getName() + " is now at division " + playerCurrentPos.getId());
         } else {
             System.out.println("Swap failed: No other player available to swap positions.");
         }
     }
 
-
     /**
-     * Retrieves a target player to swap positions with. 
-     * Selects a random player from the list of all players (excluding the current player).
-     * * Strategy: Random selection for unpredictability
+     * Retrieves a target player to swap positions with.
+     * Selects a random player from all players excluding the current player.
      *
-     * @param currentPlayer The player who activated the event.
-     * @return The target player for the swap, or {@code null} if none are suitable or available.
+     * @param currentPlayer The player who activated the event
+     * @return The target player for the swap, or {@code null} if none are suitable
      */
     private Player findTargetPlayer(Player currentPlayer) {
         if (gameManager == null) {
-            // Este erro é esperado no modo de edição de mapa, mas deve ser prevenido em tempo de jogo
             System.err.println("Error: GameManager not set in SwapPositionEvent");
             return null;
         }
@@ -92,7 +78,6 @@ public class SwapPositionEvent extends Event {
             return null;
         }
 
-        // Cria uma lista de alvos válidos (todos os jogadores exceto o atual)
         ArrayUnorderedList<Player> validTargets = new ArrayUnorderedList<>();
         for (Player p : allPlayers) {
             if (!p.equals(currentPlayer)) {
@@ -104,10 +89,8 @@ public class SwapPositionEvent extends Event {
             return null;
         }
 
-        // Seleciona um alvo aleatório
         int randomIndex = (int) (Math.random() * validTargets.size());
         
-        // Itera para encontrar o alvo no índice aleatório
         Player targetPlayer = null;
         Iterator<Player> targetIterator = validTargets.iterator();
         int currentIndex = 0;
@@ -120,16 +103,13 @@ public class SwapPositionEvent extends Event {
             currentIndex++;
         }
 
-        // Embora a lógica acima deva sempre retornar se o validTargets não estiver vazio,
-        // mantemos este retorno por segurança.
         return targetPlayer; 
     }
 
-    
     /**
-     * Gets a description of the event, useful for the game log and reports.
+     * Gets a description of the event for logs and reports.
      *
-     * @return A string describing the event's action.
+     * @return A string describing the event
      */
     @Override
     public String getDescription() {

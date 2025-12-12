@@ -8,9 +8,10 @@ import org.estg.ed.Maze.Maze;
 import Lists.ArrayUnorderedList;
 
 /**
- * Class responsible for transforming the Maze data model into a graph structure.
- *
- * This class bridges the gap between the loaded Maze object and the Network data structure used for graph algorithms
+ * Responsible for converting a Maze data model into a graph representation.
+ * 
+ * This class transforms the Maze object into a MazeNetwork, making it suitable
+ * for graph algorithms and network operations.
  * 
  */
 public class MazeGraphConverter {
@@ -18,21 +19,19 @@ public class MazeGraphConverter {
     /**
      * Converts a Maze instance into a MazeNetwork (weighted graph).
      *
-     * @param maze O objeto Maze.
-     * @return A fully constructed MazeNetwork (CORRIGIDO o tipo de retorno).
+     * @param maze the Maze object to convert
+     * @return a fully constructed MazeNetwork
      */
-    public static MazeNetwork convertMazeToNetwork(Maze maze) { // ⬅️ ALTERADO: Retorna MazeNetwork
+    public static MazeNetwork convertMazeToNetwork(Maze maze) {
 
-        MazeNetwork network = new MazeNetwork(); // ⬅️ ALTERADO: Instancia MazeNetwork
+        MazeNetwork network = new MazeNetwork();
 
         ArrayUnorderedList<Division> divisions = maze.getD();
         ArrayUnorderedList<Hallway> halls = maze.getH();
 
-        // 1. Adicionar Vértices e configurar divisões especiais
         for (Division division : divisions) {
             network.addVertex(division);
-            
-            // É essencial configurar as salas especiais (Start/Central)
+
             if (division.getDt() == DivisionType.CENTRAL) {
                 network.setCentralRoom(division);
             }
@@ -41,15 +40,21 @@ public class MazeGraphConverter {
             }
         }
 
-        // 2. Adicionar Arestas (Corredores)
         for (Hallway hall : halls) {
             network.addEdge(hall.getOrigin(), hall.getDestination(), hall.getWeight());
-            
-            // Adiciona o Hallway à lista interna do MazeNetwork
             network.hallways.addToRear(hall); 
         }
 
-        return network; // Retorna o objeto MazeNetwork
+        return network;
     }
 }
+
+
+
+
+
+
+
+
+
 

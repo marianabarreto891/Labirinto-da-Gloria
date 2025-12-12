@@ -12,36 +12,31 @@ import org.json.JSONObject;
 import Lists.ArrayUnorderedList;
 
 /**
- * Class responsible for serializing a Maze object into a JSON file format.
- * This class is the counterpart to MazeLoader.
+ * Class responsible for saving a Maze object to a JSON file.
+ * It serializes the maze structure including divisions and hallways.
  */
 public class MazeSaver {
 
     /**
-     * Converts a Maze object into a structured JSON file.
+     * Saves the Maze object to a JSON file with proper formatting.
      *
-     * @param maze The Maze object to be saved.
-     * @param filename The name of the file (ex: 'new_map.json').
-     * @return true if the map was saved successfully, false otherwise.
+     * @param maze The Maze object to be saved
+     * @param filename The filename for the saved JSON (e.g., "new_map.json")
+     * @return true if saving was successful, false otherwise
      */
     public static boolean saveMazeToJSON(Maze maze, String filename) {
-        // 1. Criar o objeto JSON principal
         JSONObject mazeJson = new JSONObject();
         mazeJson.put("id", maze.getId());
         mazeJson.put("name", maze.getName());
 
-        // 2. Serializar Divisões
         JSONArray divisionsArray = serializeDivisions(maze.getD());
         mazeJson.put("divisions", divisionsArray);
 
-        // 3. Serializar Corredores (Hallways)
         JSONArray hallsArray = serializeHallways(maze.getH());
         mazeJson.put("halls", hallsArray);
 
-        // 4. Escrever o JSON para o ficheiro
         try (FileWriter file = new FileWriter(filename)) {
-            // Usamos o toString(4) para formatar o JSON (indentação de 4 espaços), tornando-o legível.
-            file.write(mazeJson.toString(4)); 
+            file.write(mazeJson.toString(4));
             System.out.println("Map successfully saved to: " + filename);
             return true;
         } catch (IOException e) {
@@ -49,42 +44,48 @@ public class MazeSaver {
             return false;
         }
     }
-    
+
     /**
-     * Helper: Converte a lista de Divisions para um JSONArray.
+     * Converts a list of Divisions into a JSONArray.
+     *
+     * @param divisions The list of divisions to serialize
+     * @return JSONArray representation of divisions
      */
     private static JSONArray serializeDivisions(ArrayUnorderedList<Division> divisions) {
         JSONArray jsonArray = new JSONArray();
         for (Division division : divisions) {
             JSONObject divisionJson = new JSONObject();
             divisionJson.put("id", division.getId());
-            // Conversão do Enum DivisionType para o inteiro usado no JSON.
             divisionJson.put("type", getDivisionTypeInt(division.getDt()));
-            // Poderia adicionar aqui lógica para serializar o 'Content' (Enigma/Lever) se necessário.
             jsonArray.put(divisionJson);
         }
         return jsonArray;
     }
 
-// No ficheiro MazeSaver.java, dentro do método serializeHallways
-private static JSONArray serializeHallways(ArrayUnorderedList<Hallway> hallways) {
-    JSONArray jsonArray = new JSONArray();
-    for (Hallway hallway : hallways) {
-        JSONObject hallJson = new JSONObject();
-        hallJson.put("from", hallway.getOrigin().getId());
-        hallJson.put("to", hallway.getDestination().getId());
-        hallJson.put("weight", hallway.getWeight());
-        
-        // CORREÇÃO: Deve usar getEventId() em vez de getEvent()
-        hallJson.put("eventId", hallway.getEventId()); 
-        
-        jsonArray.put(hallJson);
+    /**
+     * Converts a list of Hallways into a JSONArray.
+     *
+     * @param hallways The list of hallways to serialize
+     * @return JSONArray representation of hallways
+     */
+    private static JSONArray serializeHallways(ArrayUnorderedList<Hallway> hallways) {
+        JSONArray jsonArray = new JSONArray();
+        for (Hallway hallway : hallways) {
+            JSONObject hallJson = new JSONObject();
+            hallJson.put("from", hallway.getOrigin().getId());
+            hallJson.put("to", hallway.getDestination().getId());
+            hallJson.put("weight", hallway.getWeight());
+            hallJson.put("eventId", hallway.getEventId());
+            jsonArray.put(hallJson);
+        }
+        return jsonArray;
     }
-    return jsonArray;
-}
 
     /**
-     * Helper: Mapeia o Enum de volta para o inteiro usado no JSON (simetria com MazeLoader).
+     * Maps a DivisionType enum to the corresponding integer used in the JSON.
+     *
+     * @param type The DivisionType to convert
+     * @return The integer representing the division type
      */
     private static int getDivisionTypeInt(DivisionType type) {
         switch (type) {
@@ -99,7 +100,7 @@ private static JSONArray serializeHallways(ArrayUnorderedList<Hallway> hallways)
             case NULL:
                 return 5;
             default:
-                return 5; 
+                return 5;
         }
     }
 }

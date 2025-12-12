@@ -15,31 +15,27 @@ import org.estg.ed.Players.Player;
 import Lists.ArrayUnorderedList;
 
 /**
- * Classe responsável por inicializar o jogo, carregar ou criar o labirinto e o
- * conteúdo,
- * e gerir a seleção dos modos de jogo (Manual ou Automático) e o número de
- * jogadores.
- * * NOTA: Esta classe NÃO é o ponto de entrada. Use MainMenu.java para executar o
- * programa.
+ * Class responsible for initializing the game, loading or creating the maze and its content,
+ * and managing the selection of game modes (Manual or Automatic) and the number of players.
+ * * NOTE: This class is NOT the entry point. Use MainMenu.java to run the program.
  */
 public class GameInitializer {
 
-    // ⭐ ESTRUTURA DE PASTAS ATUALIZADA
     private static final String MAPS_FOLDER = "Files/";
     private static final String ENIGMAS_FOLDER = "files.enigma/";
     private static final String OUTPUT_FOLDER = "Files/";
     private static final String ENIGMAS_FILE = ENIGMAS_FOLDER + "enigma.json";
 
     /**
-     * Inicia uma sessão completa de jogo com um mapa específico.
-     * * @param mapPath Caminho para o ficheiro do mapa
-     * @param scanner Scanner para input do utilizador
-     * @return true se o jogador quer jogar novamente, false caso contrário
+     * Initializes a complete game session with a specific map.
+     *
+     * @param mapPath Path to the map file.
+     * @param scanner Scanner for user input.
+     * @return {@code true} if the player wants to play again, {@code false} otherwise.
      */
     public boolean startGameSession(String mapPath, Scanner scanner) {
         System.out.println("\n=== Labyrinth of Glory Simulator ===\n");
 
-        // 1. Carregar o mapa selecionado
         MazeManager mazeManager = new MazeManager();
         Maze maze = mazeManager.loadMazeWithContents(mapPath, ENIGMAS_FILE);
 
@@ -50,7 +46,6 @@ public class GameInitializer {
 
         System.out.println("Map '" + maze.getName() + "' loaded successfully!");
 
-        // 2. Seleção do modo de jogo e criação dos jogadores (com posição inicial null)
         ArrayUnorderedList<Player> players = selectModeAndCreatePlayers(scanner);
 
         if (players.isEmpty()) {
@@ -58,43 +53,36 @@ public class GameInitializer {
             return false;
         }
 
-        // ⭐ PASSO ALTERADO: Cada jogador escolhe (ou é atribuído) um ponto de entrada
         System.out.println("\n--- ENTRY POINTS ---");
         for (Player player : players) {
-            
-            // ⭐ MENSAGEM ALTERADA
+
             System.out.println("\n--- " + player.getName() + ", choose your entry ---");
-            
-            // O selectEntryDivision será chamado para CADA jogador
+
             Division initialPosition = selectEntryDivisionForPlayer(maze.getD(), scanner, player.getName());
-            
+
             if (initialPosition == null) {
                 System.err.println("ERROR: Maze does not have any entry division (ENTRY). Ending session.");
                 return false;
             }
-            
-            player.setCurrentDivision(initialPosition); 
+
+            player.setCurrentDivision(initialPosition);
         }
 
-        // 5. Iniciar o jogo
         GameManager gameManager = new GameManager(maze, players);
         gameManager.startGame();
 
-        // 6. Perguntar se quer jogar novamente
         return askPlayAgain(scanner);
     }
-    
-    // ... (O resto do createMapOnly fica inalterado)
 
     /**
-     * Cria um novo mapa interativamente (SEM iniciar o jogo)
-     * * @param scanner Scanner para input do utilizador
+     * Creates a new map interactively (WITHOUT starting the game).
+     *
+     * @param scanner Scanner for user input.
      */
     public void createMapOnly(Scanner scanner) {
         System.out.println("\n--- INTERACTIVE MAP EDITOR MODE ---");
         MazeEditor editor = new MazeEditor();
 
-        // 1. METADADOS
         System.out.println("\n--- 1. EDITOR ---");
         int id = 1;
         try {
@@ -109,7 +97,6 @@ public class GameInitializer {
         String name = scanner.nextLine();
         editor.setMetadata(id, name);
 
-        // 2. ADICIONAR DIVISÕES
         System.out.println("\n--- 2. ADD DIVISIONS ---");
         System.out.println("Types: [1] ENTRY, [2] ENIGMA, [3] LEVER, [4] CENTRAL, [5] NULL");
 
@@ -140,7 +127,6 @@ public class GameInitializer {
 
         } while (!"n".equals(input));
 
-        // 3. CONECTAR DIVISÕES (CORREDORES)
         System.out.println("\n--- 3. CONNECT HALLWAYS ---");
         System.out.println(HallwayManager.getEventMapping());
 
@@ -169,7 +155,6 @@ public class GameInitializer {
 
         } while (!"n".equals(input));
 
-        // 4. SALVAR O MAPA (NÃO INICIA O JOGO)
         System.out.print("\nFile name (without extension): ");
         String filename = scanner.nextLine().trim();
 
@@ -177,7 +162,6 @@ public class GameInitializer {
             filename += ".json";
         }
 
-        // ⭐ GUARDAR NA PASTA MAPS
         String fullSavePath = OUTPUT_FOLDER + filename;
         editor.saveMaze(fullSavePath);
 
@@ -186,18 +170,17 @@ public class GameInitializer {
 
 
     /**
-     * Permite ao utilizador selecionar uma divisão de entrada de uma lista de
-     * opções.
-     * * NOTA: Este é o método adaptado para a escolha de CADA jogador.
-     * * @param divisions Lista de todas as divisões do labirinto.
-     * @param scanner   Scanner para input do utilizador.
-     * @param playerName O nome do jogador que está a escolher.
-     * @return A Division de entrada escolhida, ou null se não houver opção/erro.
+     * Allows the user to select an entry division from a list of options.
+     * * NOTE: This method is adapted for EACH player's choice.
+     *
+     * @param divisions  List of all divisions in the maze.
+     * @param scanner    Scanner for user input.
+     * @param playerName The name of the player making the choice.
+     * @return The chosen entry {@code Division}, or {@code null} if no options exist or an error occurs.
      */
     private Division selectEntryDivisionForPlayer(ArrayUnorderedList<Division> divisions, Scanner scanner, String playerName) {
         ArrayUnorderedList<Division> entryDivisions = new ArrayUnorderedList<>();
 
-        // 1. Coletar todas as entradas disponíveis
         for (Division div : divisions) {
             if (div.getDt() == DivisionType.ENTRY) {
                 entryDivisions.addToRear(div);
@@ -205,25 +188,22 @@ public class GameInitializer {
         }
 
         if (entryDivisions.isEmpty()) {
-            return null; // Não há entradas
+            return null;
         }
 
         if (entryDivisions.size() == 1) {
-            // Se houver apenas uma, escolhe automaticamente
             Division singleEntry = entryDivisions.first();
             System.out.println(
                     "Only one ENTRY division found (ID: " + singleEntry.getId() + "). Using it for " + playerName + ".");
             return singleEntry;
         }
 
-        // 2. Pedir ao utilizador para escolher
         System.out.println("Available Entry Divisions:");
         for (Division div : entryDivisions) {
             System.out.println(" [" + div.getId() + "] Division " + div.getId());
         }
 
         while (true) {
-            // ⭐ MENSAGEM ALTERADA
             System.out.print(playerName + ", choose your entry (Enter the ID): ");
             try {
                 int choiceId = Integer.parseInt(scanner.nextLine());
@@ -239,11 +219,12 @@ public class GameInitializer {
             }
         }
     }
-    
-    // O método findEntryDivision original não é mais necessário, mas vamos mantê-lo
-    // se for usado noutro local:
+
     /**
-     * Encontra a divisão de entrada no labirinto
+     * Finds the entry division in the maze.
+     *
+     * @param divisions List of all divisions.
+     * @return The first {@code ENTRY} type {@code Division} found, or {@code null} if none exists.
      */
     private Division findEntryDivision(ArrayUnorderedList<Division> divisions) {
         for (Division division : divisions) {
@@ -256,7 +237,10 @@ public class GameInitializer {
 
 
     /**
-     * Pergunta ao jogador se quer jogar novamente
+     * Asks the player if they want to play again.
+     *
+     * @param scanner Scanner for user input.
+     * @return {@code true} if the player responds 'y' or 'yes', {@code false} otherwise.
      */
     private boolean askPlayAgain(Scanner scanner) {
         System.out.println("\n" + "=".repeat(60));
@@ -266,7 +250,10 @@ public class GameInitializer {
     }
 
     /**
-     * Auxiliar para mapear int para DivisionType
+     * Helper method to map an integer to a {@code DivisionType}.
+     *
+     * @param type The integer representation of the division type (1-5).
+     * @return The corresponding {@code DivisionType}, or {@code null} if the input is invalid.
      */
     private DivisionType getTypeFromInt(int type) {
         switch (type) {
@@ -286,14 +273,16 @@ public class GameInitializer {
     }
 
     /**
-     * Cria e retorna a lista de jogadores baseada na escolha do modo.
-     * * NOTA: A Posição Inicial NÃO é definida aqui. Será definida em startGameSession.
+     * Creates and returns the list of players based on the mode selection.
+     * * NOTE: The Initial Position is NOT set here. It will be set in {@code startGameSession}.
+     *
+     * @param scanner Scanner for user input.
+     * @return An {@code ArrayUnorderedList} of {@code Player} objects.
      */
-    private ArrayUnorderedList<Player> selectModeAndCreatePlayers(Scanner scanner) { // Assinatura alterada!
+    private ArrayUnorderedList<Player> selectModeAndCreatePlayers(Scanner scanner) {
         ArrayUnorderedList<Player> players = new ArrayUnorderedList<>();
-        
-        // Passamos null para a posição inicial.
-        Division tempInitialPosition = null; 
+
+        Division tempInitialPosition = null;
 
         System.out.println("\n--- MODE SELECTION ---");
         System.out.println(" [1] Manual (Human Players)");
@@ -321,20 +310,17 @@ public class GameInitializer {
             for (int i = 0; i < numHumans; i++) {
                 System.out.print("Player Name " + (i + 1) + ": ");
                 String name = scanner.nextLine();
-                // Passamos null como initialPosition
-                players.addToRear(new HumanPlayer(name, tempInitialPosition, scanner)); 
+                players.addToRear(new HumanPlayer(name, tempInitialPosition, scanner));
             }
 
         } else if ("2".equals(modeChoice)) {
             System.out.println("\n--- AUTOMATIC MODE SELECTED ---");
-            // Passamos null como initialPosition
-            players.addToRear(new BotPlayer("Bot Alpha", tempInitialPosition, scanner)); 
+            players.addToRear(new BotPlayer("Bot Alpha", tempInitialPosition, scanner));
             players.addToRear(new BotPlayer("Bot Beta", tempInitialPosition, scanner));
 
         } else {
             System.out.println("Invalid mode choice. Using Manual mode with 1 default player.");
-            // Passamos null como initialPosition
-            players.addToRear(new HumanPlayer("Default Player", tempInitialPosition, scanner)); 
+            players.addToRear(new HumanPlayer("Default Player", tempInitialPosition, scanner));
         }
 
         return players;
@@ -342,14 +328,18 @@ public class GameInitializer {
 
 
     /**
-     * Retorna o caminho da pasta de mapas (útil para o MainMenu)
+     * Returns the path to the maps folder (useful for MainMenu).
+     *
+     * @return The string path to the maps folder.
      */
     public static String getMapsFolder() {
         return MAPS_FOLDER;
     }
 
     /**
-     * Retorna o caminho da pasta de enigmas
+     * Returns the path to the enigmas folder.
+     *
+     * @return The string path to the enigmas folder.
      */
     public static String getEnigmasFolder() {
         return ENIGMAS_FOLDER;

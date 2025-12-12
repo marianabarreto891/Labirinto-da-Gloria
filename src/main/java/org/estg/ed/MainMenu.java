@@ -6,8 +6,9 @@ import java.util.Scanner;
 import org.estg.ed.Manager.GameInitializer;
 
 /**
- * Main Menu for the Labyrinth of Glory.
- * Responsible for managing the entire application and allowing multiple game sessions.
+ * Main menu for the Labyrinth of Glory game.
+ * Handles the overall application flow, including starting game sessions,
+ * creating new maps, and listing available maps.
  */
 public class MainMenu {
 
@@ -24,7 +25,7 @@ public class MainMenu {
     }
 
     /**
-     * Main menu loop
+     * Main menu loop that displays options and handles user input.
      */
     public void run() {
         boolean exit = false;
@@ -56,7 +57,7 @@ public class MainMenu {
     }
 
     /**
-     * Displays the main menu
+     * Displays the main menu options.
      */
     private void displayMainMenu() {
         System.out.println("\n" + "=".repeat(50));
@@ -71,14 +72,13 @@ public class MainMenu {
     }
 
     /**
-     * Starts a game session
+     * Starts a game session by letting the user select a map and launch the game.
      */
     private void playGame() {
         System.out.println("\n" + "=".repeat(50));
         System.out.println("              GAME MODE");
         System.out.println("=".repeat(50));
 
-        // Listar mapas disponíveis
         File folder = new File(FOLDER_NAME);
         File[] mapFiles = folder.listFiles((dir, name) -> name.endsWith(".json") && !name.equals("enigmas.json"));
 
@@ -89,7 +89,6 @@ public class MainMenu {
             return;
         }
 
-        // Mostrar mapas disponíveis
         System.out.println("\nAvailable Maps:");
         for (int i = 0; i < mapFiles.length; i++) {
             System.out.println(" [" + (i + 1) + "] " + mapFiles[i].getName());
@@ -102,9 +101,7 @@ public class MainMenu {
         try {
             int choice = Integer.parseInt(mapChoice);
 
-            if (choice == 0) {
-                return; // Back to menu
-            }
+            if (choice == 0) return;
 
             if (choice < 1 || choice > mapFiles.length) {
                 System.out.println("\nInvalid choice.");
@@ -113,16 +110,10 @@ public class MainMenu {
             }
 
             String selectedMap = FOLDER_NAME + mapFiles[choice - 1].getName();
-
-            // Iniciar o jogo com o mapa selecionado
             GameInitializer initializer = new GameInitializer();
-            // Note: Assuming startGameSession is defined in GameInitializer
             boolean playAgain = initializer.startGameSession(selectedMap, scanner);
 
-            // Se o jogador quiser jogar novamente, volta ao menu de seleção de mapa
-            if (playAgain) {
-                playGame();
-            }
+            if (playAgain) playGame();
 
         } catch (NumberFormatException e) {
             System.out.println("\nInvalid input.");
@@ -131,24 +122,23 @@ public class MainMenu {
     }
 
     /**
-     * Creates a new map (without starting the game automatically)
+     * Initiates the interactive map creation process without starting a game.
      */
     private void createNewMap() {
         System.out.println("\n" + "=".repeat(50));
         System.out.println("          CREATE NEW MAP");
         System.out.println("=".repeat(50));
-        
+
         GameInitializer initializer = new GameInitializer();
-        // Note: Assuming createMapOnly is defined in GameInitializer
         initializer.createMapOnly(scanner);
-        
+
         System.out.println("\nMap successfully created!");
         System.out.println("Use option [1] to play this map.\n");
         waitForEnter();
     }
 
     /**
-     * Lists all available maps
+     * Lists all available maps in the Files folder along with their sizes.
      */
     private void listAvailableMaps() {
         System.out.println("\n" + "=".repeat(50));
@@ -175,7 +165,7 @@ public class MainMenu {
     }
 
     /**
-     * Pauses for the user to read the information
+     * Pauses execution until the user presses ENTER.
      */
     private void waitForEnter() {
         System.out.print("Press ENTER to continue...");
