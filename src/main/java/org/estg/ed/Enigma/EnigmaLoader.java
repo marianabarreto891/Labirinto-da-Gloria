@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import Lists.ArrayUnorderedList;
-
+//@author Mariana Barreto 8240344
 /**
  * Utility class responsible for loading and parsing Enigma definitions from a JSON file.
  *

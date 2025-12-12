@@ -6,7 +6,7 @@ import org.estg.ed.Hall.Hallway;
 
 import Lists.ArrayUnorderedList;
 
-
+//@author Mariana Barreto 8240344
 /**
  * Represents the physical structure of the labyrinth in the game.
  *

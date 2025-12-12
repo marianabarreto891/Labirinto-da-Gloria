@@ -2,7 +2,7 @@ package org.estg.ed.Content;
 
 import org.estg.ed.Divisions.DivisionType;
 import org.estg.ed.Players.Player;
-
+//@author Mariana Barreto 8240344
 public abstract class Content {
     private boolean solved;
 

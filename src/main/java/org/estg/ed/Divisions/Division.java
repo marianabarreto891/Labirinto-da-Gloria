@@ -2,6 +2,7 @@ package org.estg.ed.Divisions;
 
 import org.estg.ed.Content.Content;
 
+//@author Mariana Barreto 8240344
 /**
  * Represents a vertex (node) in the game map network.
  * 

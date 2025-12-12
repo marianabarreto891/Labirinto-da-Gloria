@@ -14,6 +14,7 @@ import org.estg.ed.Players.Player;
 import Lists.ArrayUnorderedList;
 import Lists.DoublyLinkedUnorderedList;
 
+//@author Mariana Barreto 8240344
 /**
  * Manages the core game logic for the Labyrinth of Glory.
  *

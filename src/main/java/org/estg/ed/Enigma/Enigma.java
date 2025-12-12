@@ -4,7 +4,7 @@ import org.estg.ed.Content.Content;
 import org.estg.ed.Divisions.DivisionType;
 import org.estg.ed.Players.Player;
 
-
+//@author Mariana Barreto 8240344
 /**
  * Represents a question within the maze.
  *

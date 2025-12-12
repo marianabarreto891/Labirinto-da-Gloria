@@ -3,12 +3,12 @@ package org.estg.ed.Manager;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 
 import org.estg.ed.Players.Player;
-
 import Lists.ArrayUnorderedList;
 
 //@author Joana Rodrigues 8240334

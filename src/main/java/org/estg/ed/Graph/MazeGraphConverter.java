@@ -7,6 +7,8 @@ import org.estg.ed.Maze.Maze;
 
 import Lists.ArrayUnorderedList;
 
+
+//@author Mariana Barreto 8240344
 /**
  * Responsible for converting a Maze data model into a graph representation.
  * 

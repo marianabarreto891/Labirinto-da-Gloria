@@ -72,17 +72,17 @@ public class HallwayManager {
      *
      * @return a formatted string listing all hallway events
      */
-    public static String getEventMapping() {
-        return "\n--- Mapeamento de Eventos (Corredores) ---\n" +
-                " [0] Nenhum Evento\n" +
-                " [1] ExtraMoveEvent (Ganhar 1 jogada extra)\n" +
-                " [2] ExtraMoveEvent (Ganhar 2 jogadas extra)\n" +
-                " [3] MoveBackEvent (Recuar 1 divisão)\n" +
-                " [4] MoveBackEvent (Recuar 2 divisões)\n" +
-                " [5] SkipTurnEvent (Perder 1 turno)\n" +
-                " [6] SkipTurnEvent (Perder 2 turnos)\n" +
-                " [7] SwapPositionEvent (Trocar posição com outro jogador)\n" +
-                " [8] SwapAllPositionsEvent (Trocar posições de TODOS os jogadores)\n" +
+ public static String getEventMapping() {
+        return "\n--- Event Mapping (Corridors) ---\n" +
+                " [0] No Event\n" +
+                " [1] ExtraMoveEvent (Gain 1 extra move)\n" +
+                " [2] ExtraMoveEvent (Gain 2 extra moves)\n" +
+                " [3] MoveBackEvent (Move back 1 division)\n" +
+                " [4] MoveBackEvent (Move back 2 divisions)\n" +
+                " [5] SkipTurnEvent (Lose 1 turn)\n" +
+                " [6] SkipTurnEvent (Lose 2 turns)\n" +
+                " [7] SwapPositionEvent (Swap position with another player)\n" +
+                " [8] SwapAllPositionsEvent (Swap ALL players' positions)\n" +
                 "----------------------------------------------\n";
     }
 
